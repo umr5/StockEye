@@ -41,7 +41,7 @@ async function sellStock(stock_name){
         querySnapshot.forEach((doc) => {
             deleteDoc(doc.ref);
 
-            let profit = ((doc.data().quantity * doc.data().price) - (doc.data().quantity * res.Array[0]));
+            let profit = ((doc.data().quantity * res.Array[0]) - (doc.data().quantity * doc.data().price));
     
             console.log("profit: " + profit);
         });

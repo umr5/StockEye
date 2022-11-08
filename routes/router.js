@@ -3,7 +3,7 @@ import path from 'path';
 import * as stockController from '../model/stocks.js';
 import { auth } from "../Controller/firebase.js";
 import { addTrader , buyStock, sellStock } from '../model/User.js';
-import { registerUser, loginUser} from '../Controller/authentication.js';
+import { registerUser, loginUser, signOut} from '../Controller/authentication.js';
 
 
 const app = express();
@@ -23,6 +23,12 @@ router.get('/', (req, res)=>{
             res.render('./page/index.ejs', { root: __dirname, Stocks: stocks});
         })
 });
+
+router.get('/signOut', (req, res)=>{
+    signOut();
+})
+
+router.get('/')
 
 router.get("/login", (req, res)=>{
     res.render('./page/login');
