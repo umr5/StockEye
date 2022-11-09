@@ -39,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private LoginButton fb_login_btn;
+    private Button register_btn;
     private AccessTokenTracker accessTokenTracker;
     private static final String TAG = "FacebookAuthentication";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +50,13 @@ public class MainActivity extends AppCompatActivity {
         TextView username = (TextView) findViewById(R.id.Username);
         TextView password = (TextView) findViewById(R.id.Password);
         Button login_btn = (Button) findViewById(R.id.log_in_btn);
+        Button register_btn = (Button) findViewById(R.id.register_btn);
         ImageView myLogo = (ImageView) findViewById(R.id.logo);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         //FacebookSdk.sdkInitialize(getApplicationContext());
         FacebookSdk.fullyInitialize();
-        // This line isn't needed anymore
         fb_login_btn = findViewById(R.id.fb_login_button);
-        //fb_login_btn.setReadPermissions("email", "public_profile");
         mCallbackManager = CallbackManager.Factory.create();
         fb_login_btn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -118,11 +117,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        register_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // must change username "admin" to a variable "username" same with password
+//                if (username.getText().toString().equals("admin") && password.getText().toString().equals("admin")){
+//                    // correct
+                openRegister();
+            }
+//                else{
+//                    //incorrect
+//                    Toast.makeText(MainActivity.this, "Log in failed", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+        });
+
+
     }
     public void openHome() {
         Intent intent = new Intent(this, home.class);
         startActivity(intent);
     }
+
+    public void openRegister() {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
+
     private void handleFacebookToken(AccessToken token) {
         Log.d(TAG, "handleFacebookToken" + token);
 
