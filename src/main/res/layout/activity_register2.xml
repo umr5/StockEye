@@ -1,0 +1,158 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="#050505"
+android:textAlignment="center"
+tools:context=".RegisterActivity">
+
+<com.google.android.material.textfield.TextInputEditText
+    android:id="@+id/Email"
+    android:layout_width="185dp"
+    android:layout_height="48dp"
+    android:layout_weight="1"
+    android:background="@color/white"
+    android:drawableLeft="@drawable/ic_baseline_person_24"
+    android:hint="Email"
+    android:textAlignment="center"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.453" />
+
+<EditText
+    android:id="@+id/Confirm_password"
+    android:layout_width="185dp"
+    android:layout_height="52dp"
+    android:background="#FFFFFF"
+    android:drawableLeft="@drawable/ic_baseline_lock_open_24"
+    android:ems="10"
+    android:hint="Confirm Password"
+    android:inputType="textPassword"
+    android:textAlignment="center"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.628" />
+
+<Button
+    android:id="@+id/Create_btn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:backgroundTint="#5A5A5A"
+    android:text="Create account"
+    android:textColor="#FFFFFF"
+    android:textSize="14dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.497"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.737" />
+
+<EditText
+    android:id="@+id/Password"
+    android:layout_width="185dp"
+    android:layout_height="48dp"
+    android:background="#FFFFFF"
+    android:drawableLeft="@drawable/ic_baseline_lock_open_24"
+    android:ems="10"
+    android:hint="Password"
+    android:inputType="textPassword"
+    android:textAlignment="center"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.54" />
+
+<com.google.android.material.textfield.TextInputEditText
+    android:id="@+id/FullName"
+    android:layout_width="185dp"
+    android:layout_height="48dp"
+    android:layout_weight="1"
+    android:background="@color/white"
+    android:drawableLeft="@drawable/ic_baseline_person_24"
+    android:hint="Fullname"
+    android:textAlignment="center"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.368" />
+
+<TextView
+    android:id="@+id/StockText"
+    android:layout_width="102dp"
+    android:layout_height="60dp"
+    android:fontFamily="serif"
+    android:text="Stock"
+    android:textColor="@color/white"
+    android:textSize="36dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.378"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.256" />
+
+<ImageView
+    android:id="@+id/logo"
+    android:layout_width="136dp"
+    android:layout_height="133dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.487"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.065"
+    app:srcCompat="@drawable/stockeyelogo2" />
+
+<Button
+    android:id="@+id/Back_btn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:backgroundTint="#5A5A5A"
+    android:text="Go Back"
+    android:textColor="#FFFFFF"
+    android:textSize="14dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.935" />
+
+<TextView
+    android:id="@+id/EyeText"
+    android:layout_width="102dp"
+    android:layout_height="60dp"
+    android:fontFamily="serif"
+    android:text="Eye"
+    android:textAlignment="center"
+    android:textColor="#FA0404"
+    android:textSize="36dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.647"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.256" />
+
+<ProgressBar
+    android:id="@+id/ProgressBar"
+    style="?android:attr/progressBarStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.498"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/Create_btn"
+    app:layout_constraintVertical_bias="0.237" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

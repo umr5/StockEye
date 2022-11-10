@@ -14,11 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Group_app_prototype1"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
-        <!-- try a vm with api 31 -->
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />

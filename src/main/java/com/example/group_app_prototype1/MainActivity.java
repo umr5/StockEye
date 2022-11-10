@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,8 +18,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,9 +27,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.squareup.picasso.Picasso;
-
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
@@ -47,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView username = (TextView) findViewById(R.id.Username);
+        TextView username = (TextView) findViewById(R.id.Email);
         TextView password = (TextView) findViewById(R.id.Password);
         Button login_btn = (Button) findViewById(R.id.log_in_btn);
         Button register_btn = (Button) findViewById(R.id.register_btn);
@@ -106,32 +100,15 @@ public class MainActivity extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // must change username "admin" to a variable "username" same with password
-                if (username.getText().toString().equals("admin") && password.getText().toString().equals("admin")){
-                    // correct
-                    openHome();
-                }else{
-                    //incorrect
-                    Toast.makeText(MainActivity.this, "Log in failed", Toast.LENGTH_SHORT).show();
-                }
+                openHome();
             }
         });
-
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // must change username "admin" to a variable "username" same with password
-//                if (username.getText().toString().equals("admin") && password.getText().toString().equals("admin")){
-//                    // correct
                 openRegister();
             }
-//                else{
-//                    //incorrect
-//                    Toast.makeText(MainActivity.this, "Log in failed", Toast.LENGTH_SHORT).show();
-//                }
-//            }
         });
-
 
     }
     public void openHome() {
