@@ -1,6 +1,15 @@
+<head>
+    <meta charset="UTF-8">
+    <title>StockEye</title>
+</head>
 <body>
     <Text>welcome to the main page</Text>
-    <form action="./login" method="get"><input type="submit" value="login" /></form>
+    <% if(currentuser == null){%>
+        <form action="./login" method="get"><input type="submit" value="login" /></form>
+    <%}else{%>
+        <form action="./account/<%=currentuser.uid%>" method="get"><input type="submit" value="My Account" /></form>
+        <form action="./signOut" method="get"><input type="submit" value="Sign Out" /></form>
+    <%}%>
     <!--This is a list containing all the stocks -->
     <ul>
         <!--uses ejs to loop through the Stocks, which are passed here from tbe router-->

@@ -19,4 +19,10 @@ async function getStock(name){
     return docSnap.data();
 }
 
-export {getStock, getAllStocks};
+function getProfit(investment, stock){
+    //  profit = ((amount of shares    * current price ) - (amount of shares   * price at purchase))
+    let profit = ((investment.quantity * stock.Value.pop()) - (investment.quantity * investment.price));
+    return profit;
+}
+
+export {getStock, getAllStocks, getProfit};

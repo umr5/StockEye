@@ -2,8 +2,9 @@ import express from 'express';
 import path from 'path';
 import * as stockController from '../model/stocks.js';
 import { auth } from "../Controller/firebase.js";
-import { addTrader , buyStock, sellStock } from '../model/User.js';
-import { registerUser, loginUser, signOut} from '../Controller/authentication.js';
+import { buyStock, sellStock, getInvestment, getBrokers } from '../model/User.js';
+import { registerTrader, registerBroker, loginTrader, loginBroker, SignOut} from '../Controller/authentication.js';
+import { getProfit } from '../model/stocks.js';
 
 
 const app = express();
@@ -12,7 +13,7 @@ const __dirname = process.cwd();
 app.set('views', path.join(__dirname, '/public'));
 app.use(express.static(__dirname + '/public'));
 
-router.use((req,res,next)=>{console.log("router>>>",req.method,req.url,req.body); return next();});
+//router.use((req,res,next)=>{console.log("router>>>",req.method,req.url,req.body); return next();});
 
 //getting login.html at '/' , later this will have to be replaced with the main page
 router.get('/', (req, res)=>{ 
@@ -20,49 +21,91 @@ router.get('/', (req, res)=>{
     stockController.getAllStocks()
         .then((result)=>{
             stocks = result;
-            res.render('./page/index.ejs', { root: __dirname, Stocks: stocks});
+            res.render('./page/index.ejs', { root: __dirname, Stocks: stocks, currentuser: auth.currentUser});
         })
 });
 
 router.get('/signOut', (req, res)=>{
-    signOut();
+    SignOut();
+    res.redirect('/')
 })
 
-router.get('/')
+//router to users account page
+router.get('/account/:id', (req, res)=>{
+    let investments = [];
+    let stock_arr = [];
+    let brokers = [];
+    getBrokers()
+        .then((result)=>{
+            brokers = result;
+        })
+    getInvestment()
+        .then((result) => {
+            investments = result.investments;
+            stock_arr = result.users_stocks;
+            res.render('./page/account', {currentuser: auth.currentUser, investments, stock_arr, profit_function: getProfit, brokers});
+        })
+})
 
+//trader and broker logins
 router.get("/login", (req, res)=>{
-    res.render('./page/login');
+    res.render('./page/login',);
+})
+router.get("/temp_broker_login", (req, res)=>{
+    res.render('./page/temp_broker_login')
 })
 
 //posting form to /registration
-router.post('/registration', (req, res, next)=>{
-    console.log("registering")
+router.post('/registration/trader', (req, res, next)=>{
     var username = req.body.regName;
     var password = req.body.regPass;
     var email = req.body.regMail;
-    registerUser(email, password, username);
+    setTimeout(()=>{registerTrader(email, password, username)}, 2000);
 
     res.redirect('/');
 });
 
 //posting form to /login
-router.post('/login', (req, res, next)=>{
-    console.log("logging in");
+router.post('/login/trader', (req, res, next)=>{
     var password = req.body.logPass;
     var email = req.body.logMail;
-    loginUser(email, password);
+    loginTrader(email, password);
+    setTimeout(()=>{res.redirect('/')},2000);
+});
+
+//posting form to /registration
+router.post('/registration/broker', (req, res, next)=>{
+    var username = req.body.regName;
+    var password = req.body.regPass;
+    var email = req.body.regMail;
+    var institution = req.body.reginst;
+    setTimeout(()=>{registerBroker(email, password, username, institution)}, 2000);
+
     res.redirect('/');
+});
+
+//posting form to /login
+router.post('/login/broker', (req, res, next)=>{
+    var password = req.body.logPass;
+    var email = req.body.logMail;
+    loginBroker(email, password);
+    setTimeout(()=>{res.redirect('/')},2000);
 });
 
 router.post('/buy/:id', (req, res, next)=>{
-    console.log("User " + auth.currentUser.displayName + " buying " + req.params.id + " with " + req.body.amount);
-    buyStock(req.params.id, req.body.amount);
-    res.redirect('/');
+    if(auth.currentUser){
+        console.log("User " + auth.currentUser.displayName + " buying " + req.params.id + " with " + req.body.amount);
+        buyStock(req.params.id, req.body.amount);
+        res.redirect('/');
+    }
 });
 
 router.post('/sell/:id', (req, res,)=>{
-    console.log("User " + auth.currentUser.displayName + " selling " + req.params.id);
-    sellStock(req.params.id);
-    res.redirect('/');
+    if(auth.currentUser){
+        console.log("User " + auth.currentUser.displayName + " selling " + req.params.id);
+        sellStock(req.params.id);
+        res.redirect('/');
+    }
 })
+
 export {router}

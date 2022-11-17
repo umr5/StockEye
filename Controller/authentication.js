@@ -1,18 +1,18 @@
 import { auth } from "./firebase.js";
-import {createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateCurrentUser, updateProfile} from 'firebase/auth';
-import { addTrader } from "../model/User.js";
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateCurrentUser, updateProfile,signInWithPopup} from 'firebase/auth';
+import { addTrader, addBroker } from "../model/User.js";
 
 var user;
 
-
-function registerUser(email, password, username){
+//registers a new Trader user
+function registerTrader(email, password, username){
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         updateProfile(auth.currentUser, {
           displayName: username
         }).then((res)=>{
           addTrader(auth.currentUser);
-          console.log("User registered as " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+          console.log("Trader registered as " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
         });
     })
     .catch((error) => {
@@ -22,11 +22,12 @@ function registerUser(email, password, username){
     });
 }
 
-function loginUser(email, password){
+//logs in an existing Trader user
+function loginTrader(email, password){
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       updateCurrentUser(auth, userCredential.user);
-      console.log("User siged in as: " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+      console.log("Trader siged in as: " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -35,9 +36,41 @@ function loginUser(email, password){
     });
 }
 
+//registers a new Broker User
+function registerBroker(email, password, username, institution){
+  createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+      updateProfile(auth.currentUser, {
+        displayName: username
+      }).then((res)=>{
+        addBroker(auth.currentUser);
+        console.log("Broker registered as " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+      });
+  })
+  .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+  });
+}
+
+//logs in a new Broker User
+function loginBroker(email, password){
+  signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    updateCurrentUser(auth, userCredential.user);
+    console.log("Broker siged in as: " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorCode, errorMessage);
+  });
+}
+
 function setUser(new_user){
   updateCurrentUser(auth, new_user);
-  console.log("New user set as " + auth.currentUser.email);
+  console.log("New user set as " + auth.currentUser);
 }
 
 function SignOut(){
@@ -45,4 +78,4 @@ function SignOut(){
   auth.signOut();
 }
 
-export {registerUser, loginUser, setUser};
+export {registerTrader, loginTrader, registerBroker, loginBroker, setUser, SignOut};

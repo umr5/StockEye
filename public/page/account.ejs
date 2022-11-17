@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>StockEye</title>
+    </head>
+    <body>
+        <form action="/" method="get"><input type="submit" value="To Front" /></form>
+        <text>Username: <%=currentuser.displayName%></text><br>
+        <text>Email: <%=currentuser.email%></text><br>
+        <text>uid: <%=currentuser.uid%></text><br><br>
+        <% for( let i = 0; i < investments.length; i++ ) { %>
+            <text>>><%= investments[i].stock %></text>
+            <text>current profit: $<%=profit_function(investments[i], stock_arr[i])%></text><br>
+        <% } %>
+        <br><br><br><br>
+        <text>Brokers</text>
+        <
+    </body>
+</html>

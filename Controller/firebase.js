@@ -1,6 +1,6 @@
 import { initializeApp } from '@firebase/app';
 import {getFirestore} from 'firebase/firestore';
-import { getAuth , onAuthStateChanged, updateCurrentUser} from 'firebase/auth';
+import { getAuth , onAuthStateChanged, updateCurrentUser,} from 'firebase/auth';
 //import { initializeApp } from 'firebase-admin';
 //import * as admin_key from '../stockeye-8f390-firebase-adminsdk-cc8zk-70d9d13f30.json';
 
@@ -20,4 +20,12 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 const auth = getAuth(firebaseApp);
 
-export {db, auth, onAuthStateChanged};
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log(user.uid);
+  } else {
+    // User is signed out
+    // ...
+  }
+});
+export {db, auth};

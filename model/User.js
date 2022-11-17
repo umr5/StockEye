@@ -1,18 +1,31 @@
 import {collection, getDocs, addDoc, query, where, doc, updateDoc, arrayUnion, DocumentReference, setDoc, deleteDoc} from 'firebase/firestore';
 import {db} from '../Controller/firebase.js';
-import { getStock } from "./stocks.js";
-import { auth , onAuthStateChanged} from '../Controller/firebase.js';
+import { getStock, getProfit } from "./stocks.js";
+import { auth} from '../Controller/firebase.js';
 
 
 const TradersCol = collection(db, 'User_Traders');
 const BrokersCol = collection(db, 'User_Brokers');
 
-//function handling the registration of new users
+//function handling the registration of new traders
 async function addTrader(user){
     await setDoc(doc(TradersCol, user.uid), {
         UID: user.uid,
+        acount: "Direct User",
         username: user.displayName,
         email: user.email,
+    });
+};
+
+//function handling the registration of new brokers
+async function addBroker(user){
+    await setDoc(doc(BrokersCol, user.uid), {
+        UID: user.uid,
+        account: "Broker",
+        username: user.displayName,
+        email: user.email,
+        institution: "IBA", //this is temporary
+        Traders: {}
     });
 };
 
@@ -23,10 +36,10 @@ async function buyStock(stock_name, buy_amount){
         //res.Array[0] represents the current price for now, this is a placeholder until we get the actual stock prices into the the database
         let shares = buy_amount / res.Array[0];
 
-        addDoc(collection(TradersCol, docRef.id, 'investment'), {
+        addDoc(collection(TradersCol, auth.currentUser.uid, 'investment'), {
             stock: res.Name,
             quantity: shares,
-            price: res.Array[0],
+            price: res.Value.pop(),
             timestamp: new Date()
         });
         console.log(auth.currentUser.displayName + " bought " + shares + " shares of: " + stock_name + ", with: " + buy_amount + ", at price of: " + res.Array[0]);
@@ -34,19 +47,39 @@ async function buyStock(stock_name, buy_amount){
 }
 
 async function sellStock(stock_name){
-    getStock(stock_name).then(async (res)=>{
-        const q = query(collection(TradersCol, auth.currentUser.uid, 'investment'), where("stock", "==", stock_name));
-
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            deleteDoc(doc.ref);
-
-            let profit = ((doc.data().quantity * res.Array[0]) - (doc.data().quantity * doc.data().price));
-    
-            console.log("profit: " + profit);
+    if(auth.currentUser){
+        getStock(stock_name).then(async (res)=>{
+            const querySnapshot = await getDocs(query(collection(TradersCol, auth.currentUser.uid, 'investment'), where("stock", "==", stock_name)));
+            querySnapshot.forEach((doc) => {
+                let profit = getProfit(doc.data(), res);
+                console.log("profit: " + profit);
+                deleteDoc(doc.ref);
+            });
         });
-    });
+    }
 }
 
+async function getInvestment(){
+    const investments = [];
+    const users_stocks = [];
+    
+    const querySnapshot = await getDocs(query(collection(TradersCol, auth.currentUser.uid, 'investment'), where("stock", "!=", null)));
+    querySnapshot.forEach((doc)=>{investments.push(doc.data())});
+    for(const inv of investments){
+        await getStock(inv.stock).then((res)=>{
+            users_stocks.push(res);
+        });
+    }
+    return {investments, users_stocks};
+}
 
-export {addTrader, buyStock, sellStock};
+async function getBrokers(){
+    const brokers_arr = [];
+    
+    const querySnapshot = await getDocs(query(collection(BrokersCol), where("account", "=", "Broker")));
+    querySnapshot.forEach((doc)=>{brokers_arr.push(doc.data())});
+    
+    return brokers_arr;
+}
+
+export {addTrader, addBroker, buyStock, sellStock, getInvestment, getBrokers};
