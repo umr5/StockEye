@@ -7,7 +7,7 @@
         <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
     </head>
     <body>
-        <div class="hero">
+        <div class="page">
             <div class="form-box">
                 <a href="/temp_broker_login">Are you a Broker?</a>
                 <div class="button-box">
@@ -29,6 +29,7 @@
                     <input type="text" class="input-field" placeholder="Username" id="regName" name="regName" required>
                     <input type="text" class="input-field" placeholder="Email Address" id="regMail" name="regMail" required>
                     <input type="text" class="input-field" placeholder="Password" if="regPass" name="regPass" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}" title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters">
+                    <input type="text" class="input-field" placeholder="Confirm password">
                     <button type="submit" class="submit-btn">Register</button>
                 </form>
             </div>
