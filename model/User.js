@@ -1,4 +1,4 @@
-import {collection, getDocs, addDoc, query, where, doc, updateDoc, arrayUnion, DocumentReference, setDoc, deleteDoc} from 'firebase/firestore';
+import {collection, getDocs, addDoc, query, where, doc, updateDoc, arrayUnion, DocumentReference, setDoc, deleteDoc, getDoc, FieldValue} from 'firebase/firestore';
 import {db} from '../Controller/firebase.js';
 import { getStock, getProfit } from "./stocks.js";
 import { auth} from '../Controller/firebase.js';
@@ -14,6 +14,7 @@ async function addTrader(user){
         acount: "Direct User",
         username: user.displayName,
         email: user.email,
+        Brokers: []
     });
 };
 
@@ -25,7 +26,7 @@ async function addBroker(user){
         username: user.displayName,
         email: user.email,
         institution: "IBA", //this is temporary
-        Traders: {}
+        Traders: []
     });
 };
 
@@ -73,13 +74,84 @@ async function getInvestment(){
     return {investments, users_stocks};
 }
 
-async function getBrokers(){
+async function getAllBrokers(){
     const brokers_arr = [];
     
-    const querySnapshot = await getDocs(query(collection(BrokersCol), where("account", "=", "Broker")));
+    const querySnapshot = await getDocs(query(BrokersCol, where("account", "==", "Broker")));
     querySnapshot.forEach((doc)=>{brokers_arr.push(doc.data())});
     
     return brokers_arr;
 }
 
-export {addTrader, addBroker, buyStock, sellStock, getInvestment, getBrokers};
+async function getUsersBrokers(){
+    const docRef = doc(TradersCol, auth.currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    let broker_docs = [];
+    if(docSnap.data().Brokers != null){
+        for await (const ref of docSnap.data().Brokers){
+            const docRef = doc(BrokersCol, ref);
+            const docSnap = await getDoc(docRef);
+            broker_docs.push(docSnap.data());
+        }
+    }   
+    return broker_docs;
+}
+async function subscribeToBroker(broker_uid){
+    const docRef = doc(TradersCol, auth.currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    let broker_list = []
+    if(docSnap.data().Brokers){
+        broker_list = docSnap.data().Brokers;
+    }
+    broker_list.push(broker_uid);
+    updateDoc(docRef, {Brokers: broker_list});
+    
+    const docRef2 = doc(BrokersCol, broker_uid);
+    const docSnap2 = await getDoc(docRef2);
+    let traders_list = []
+    if(docSnap2.data().Brokers){
+        traders_list = docSnap2.data().Brokers;
+    }
+    traders_list.push(auth.currentUser.uid);
+    updateDoc(docRef2, {Traders: traders_list});
+}
+
+async function unsubscribeFromBroker(broker_uid){
+    const docRef = doc(TradersCol, auth.currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    let broker_list = []
+    if(docSnap.data().Brokers){
+        broker_list = docSnap.data().Brokers;
+    }
+    const index = broker_list.indexOf(broker_uid);
+    if (index > -1) { 
+        broker_list.splice(index, 1); 
+    }
+    
+    updateDoc(docRef, {Brokers: broker_list});
+    
+    const docRef2 = doc(BrokersCol, broker_uid);
+    const docSnap2 = await getDoc(docRef2);
+    let traders_list = []
+    if(docSnap2.data().Brokers){
+        traders_list = docSnap2.data().Brokers;
+    }
+    const index2 = traders_list.indexOf(auth.currentUser.uid);
+    if (index2 > -1) { 
+        traders_list.splice(index, 1); 
+    }
+    
+    updateDoc(docRef2, {Traders: traders_list});
+}
+
+async function checkSubscribtion(broker_uid){
+    let check;
+    const docRef = doc(TradersCol, auth.currentUser.uid);
+    await getDoc(docRef).then((res)=>{
+        let doc_data = res.data();
+        let arr = doc_data.Brokers;
+        check = arr.includes(broker_uid);  
+    });
+    return check
+}
+export {addTrader, addBroker, buyStock, sellStock, getInvestment, getAllBrokers, getUsersBrokers, subscribeToBroker, unsubscribeFromBroker, checkSubscribtion};

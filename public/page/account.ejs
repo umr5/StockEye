@@ -14,6 +14,15 @@
             <text>current profit: $<%=profit_function(investments[i], stock_arr[i])%></text><br>
         <% } %>
         <br><br><br><br>
-        <text>Brokers</text>
+        <text>Your Brokers</text>
+        <% brokers.forEach((broker)=>{%>
+            <br>
+            <text><%=broker.UID%></text><br>
+            <text><%=broker.email%></text><br>
+            <text><%=broker.institution%></text><br>
+            <text><%=broker.username%></text><br>
+            <form action="/unsubscribe/<%=broker.UID%>" method="get"><button type="submit">unsubscribe</button></form>
+            <br>
+        <%}) %>
     </body>
 </html>

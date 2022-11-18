@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import * as stockController from '../model/stocks.js';
 import { auth } from "../Controller/firebase.js";
-import { buyStock, sellStock, getInvestment, getBrokers } from '../model/User.js';
+import { buyStock, sellStock, getInvestment, getAllBrokers, getUsersBrokers, subscribeToBroker, checkSubscribtion, unsubscribeFromBroker} from '../model/User.js';
 import { registerTrader, registerBroker, loginTrader, loginBroker, SignOut} from '../Controller/authentication.js';
 import { getProfit } from '../model/stocks.js';
 
@@ -31,11 +31,11 @@ router.get('/signOut', (req, res)=>{
 })
 
 //router to users account page
-router.get('/account/:id', (req, res)=>{
+router.get('/account/:id', async (req, res)=>{
     let investments = [];
     let stock_arr = [];
     let brokers = [];
-    getBrokers()
+    await getUsersBrokers()
         .then((result)=>{
             brokers = result;
         })
@@ -46,6 +46,28 @@ router.get('/account/:id', (req, res)=>{
             res.render('./page/account', {currentuser: auth.currentUser, investments, stock_arr, profit_function: getProfit, brokers});
         })
 })
+
+router.get('/brokers', async (req, res)=>{
+    let brokers = [];
+    await getAllBrokers().then((result)=>{
+        brokers = result;
+    })
+    console.log(await checkSubscribtion('NUCKtht5KjMB9pWChPPnPGFoe563'))
+    console.log(await checkSubscribtion('t7UKuDd20ZaPEJLgFJhJYDbkQgV2'))
+    res.render('./page/brokers', {brokers, checkSubscribtion, currentuser: auth.currentUser})
+})
+
+router.get('/subscribe/:id', (req, res)=>{
+    subscribeToBroker(req.params.id);
+    res.redirect('/');
+})
+
+router.get('/unsubscribe/:id', (req, res)=>{
+    unsubscribeFromBroker(req.params.id);
+    res.redirect('/');
+})
+
+
 
 //trader and broker logins
 router.get("/login", (req, res)=>{

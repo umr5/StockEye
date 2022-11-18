@@ -12,12 +12,18 @@
                 <img class="logo" src="../images/StockEyeLogo2.png">
                 <h2 class="name">Stock <span>Eye</span></h2>
                 <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Stocks</a></li>
-                    <li><a href="#">Brokers</a></li>
-                    <li><a href="#">Your profile</a></li>
+                    <li><a hred="/">Home</a></li>
+                    <li><a href="./stocks">Stocks</a></li>
+                    <li><form id="to_brokers" action="/brokers" method="get"><a href="javascript:{}" onclick="document.getElementById('to_brokers').submit();">Brokers</a></form></li>
+                    <%if(currentuser){%>
+                    <li><form id="to_account" action="./account/<%=currentuser.uid%>" method="get"><a href="javascript:{}" onclick="document.getElementById('to_account').submit();">Your profile</a></form></li>
+                    <%}%>
                 </ul>
-                <button class="logReg">Login or Register</button> 
+                <%if(!currentuser){%>
+                <form action="./login" method="get"><button class="logReg">Login or Register</button></form>
+                <%}else{%>
+                <form action="./signOut" method="get"><button class="logReg">Sign Out</button></form>
+                <%}%>
             </nav>
             <!--This is a list containing all the stocks -->
             <ul>

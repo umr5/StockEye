@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>StockEye</title>
+    </head>
+    <body>
+        <text>Brokers</text>
+        <% brokers.forEach((broker)=>{%>
+            <br>
+            <text><%=broker.UID%></text><br>
+            <text><%=broker.email%></text><br>
+            <text><%=broker.institution%></text><br>
+            <text><%=broker.username%></text><br>
+            <%if(currentuser){%>
+            <%if(false){%>
+                <button disabled>Subscribed</button>
+            <%}else{%>
+                <form action="/subscribe/<%=broker.UID%>" method="get"><button type="submit">Subscribe</button></form>
+            <%}%>
+            <%}%>
+            <br>
+        <%}) %>
+    </body>
+</html>
