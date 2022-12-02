@@ -19,43 +19,36 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterBrokerActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
-    EditText mFullName, mEmail, mPassword, mConfirmPassword;
+    EditText mFullName, mEmail, mInstitution, mPassword, mConfirmPassword;
     Button mRegister_btn, back_btn;
     FirebaseAuth fAuth;
     ProgressBar progressBar;
     FirebaseFirestore db;
-    FirebaseUser fUser;
-    Button broker;
+
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register2);
+        setContentView(R.layout.activity_register_broker);
 
         mFullName = findViewById(R.id.FullName);
         mEmail = findViewById(R.id.Email);
         mPassword = findViewById(R.id.Password);
         mConfirmPassword = findViewById(R.id.Confirm_password);
         mRegister_btn = findViewById(R.id.Create_btn);
-        broker = findViewById(R.id.brokerbtn);
-
+        mInstitution = findViewById(R.id.Institution);
         fAuth = FirebaseAuth.getInstance();
-        fUser = fAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.ProgressBar);
-
-//        if(fAuth.getCurrentUser() != null){
-//            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-//        }
 
         mRegister_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String fullname = mFullName.getText().toString().trim();
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
-                String confirm_password = mConfirmPassword.getText().toString().trim();
+                String institution = mInstitution.getText().toString().trim();
 
                 if (TextUtils.isEmpty(fullname)) {
                     mFullName.setError("Full Name is required.");
@@ -74,6 +67,12 @@ public class RegisterActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(email)) {
                     mEmail.setError("Email is required.");
                     mEmail.requestFocus();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(institution)) {
+                    mInstitution.setError("Email is required.");
+                    mInstitution.requestFocus();
                     return;
                 }
 
@@ -89,52 +88,32 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                else if(!password.equals(confirm_password)){
-                    mConfirmPassword.setError("Passwords do not match");
-                    mConfirmPassword.requestFocus();
-                }
-
                 progressBar.setVisibility(View.VISIBLE);
 
-                // Trying something
-                fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            progressBar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(RegisterActivity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                startActivity(intent);
-                        }
-                    }
-                });
                 Map<String, Object> user = new HashMap<>();
-                user.put("Account", "Trader");
-                user.put("Email", email);
-                user.put("Username", fullname);
+                user.put("account", "Broker" ); // fname + trader/broker [type of account]
+                user.put("institution", institution);
+                user.put("email", email);
+                user.put("username", fullname);
 
-                db.collection("User_Traders")
+
+                db.collection("User_Brokers")
                         .add(user)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
-                                Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                Toast.makeText(RegisterBrokerActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(RegisterBrokerActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(RegisterActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterBrokerActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+
                             }
                         });
-            }
-        });
-        broker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(RegisterActivity.this, RegisterBrokerActivity.class);
-                startActivity(intent);
+
             }
         });
     }

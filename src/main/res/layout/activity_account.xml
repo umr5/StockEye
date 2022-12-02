@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:background="@color/black"
-android:layout_height="match_parent"
-tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/black"
+    android:layout_height="match_parent"
+    tools:context=".AccountActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -16,19 +16,6 @@ tools:context=".MainActivity">
         app:layout_constraintTop_toTopOf="parent">
 
     </androidx.cardview.widget.CardView>
-
-    <Button
-        android:id="@+id/Register_btn1"
-        android:layout_width="110dp"
-        android:layout_height="40dp"
-        android:backgroundTint="#ea1538"
-        android:text="Register"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.91"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.166" />
 
     <ImageView
         android:id="@+id/logo2"
@@ -42,24 +29,11 @@ tools:context=".MainActivity">
         app:layout_constraintVertical_bias="0.127"
         app:srcCompat="@drawable/stockeyelogo2" />
 
-    <Button
-        android:id="@+id/Log_in_btn1"
-        android:layout_width="110dp"
-        android:layout_height="40dp"
-        android:backgroundTint="#ea1538"
-        android:text="Login"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.91"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.118" />
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stocks"
+        android:text="Your Stocks"
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
@@ -69,7 +43,6 @@ tools:context=".MainActivity">
         app:layout_constraintVertical_bias="0.772" />
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/Nav_bar"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
         android:background="#EA1538"
@@ -81,28 +54,24 @@ tools:context=".MainActivity">
         app:layout_constraintVertical_bias="0.004">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/Home_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Home" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/Account_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Account" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/Help_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Help" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/Broker_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Broker" />
+            android:text="Review" />
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.recyclerview.widget.RecyclerView

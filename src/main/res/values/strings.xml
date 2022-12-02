@@ -3,4 +3,15 @@
     <string name="facebook_app_id">694632178336351</string>
     <string name="fb_login_protocol_scheme">fb1234</string>
     <string name="facebook_client_token">56789</string>
+    <string name="Title">Stock Title</string>
+
+    <string-array name="Stocks">
+        <item>Stock 1</item>
+        <item>Stock 2</item>
+        <item>Stock 3</item>
+        <item>Stock 4</item>
+
+    </string-array>
+
+
 </resources>

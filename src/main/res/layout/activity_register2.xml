@@ -42,7 +42,7 @@ tools:context=".RegisterActivity">
     android:id="@+id/Create_btn"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:backgroundTint="#5A5A5A"
+    android:backgroundTint="#EA1538"
     android:text="Create account"
     android:textColor="#FFFFFF"
     android:textSize="14dp"
@@ -111,28 +111,14 @@ tools:context=".RegisterActivity">
     app:layout_constraintVertical_bias="0.065"
     app:srcCompat="@drawable/stockeyelogo2" />
 
-<Button
-    android:id="@+id/Back_btn"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:backgroundTint="#5A5A5A"
-    android:text="Go Back"
-    android:textColor="#FFFFFF"
-    android:textSize="14dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.935" />
-
-<TextView
+    <TextView
     android:id="@+id/EyeText"
     android:layout_width="102dp"
     android:layout_height="60dp"
     android:fontFamily="serif"
     android:text="Eye"
     android:textAlignment="center"
-    android:textColor="#FA0404"
+    android:textColor="#ea1538"
     android:textSize="36dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
@@ -153,6 +139,31 @@ tools:context=".RegisterActivity">
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/Create_btn"
     app:layout_constraintVertical_bias="0.237" />
+
+    <Button
+        android:id="@+id/brokerbtn"
+        android:layout_width="109dp"
+        android:layout_height="61dp"
+        android:backgroundTint="#ea1538"
+        android:text="Broker\nAccount"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.935" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="134dp"
+        android:layout_height="21dp"
+        android:text="Register as a broker"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Create_btn"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
