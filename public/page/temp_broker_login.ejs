@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>StockEye</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    </head>
+    <body>
+        <div class="page">
+            <div class="form-box">
+                <a href="/login">Are you a Trader?</a>
+                <div class="button-box">
+                    <div id="btn"></div>
+                    <button type="button" class="toggle-btn" onclick="login()">Log in</button>
+                    <button type="button" class="toggle-btn" onclick="register()">Register</button>
+                </div>
+                <form id="logForm" name="logForm" action="/login/broker" class="input-group" method="post">
+                    <input type="text" class="input-field" placeholder="Email Address" id="logMail" name="logMail" required>
+                    <input type="text" class="input-field" placeholder="Password" id="logPass" name="logPass" required>
+                    <button type="submit" class="submit-btn">Log In</button>
+                </form>
+                <form id="regForm" name="regForm" action="/registration/broker" class="input-group" method="post">
+                    <input type="text" class="input-field" placeholder="Username" id="regName" name="regName" required>
+                    <input type="text" class="input-field" placeholder="Email Address" id="regMail" name="regMail" required>
+                    <input type="text" class="input-field" placeholder="Institution" id="reginst" name="reginst" required>
+                    <input type="text" class="input-field" placeholder="Password" if="regPass" name="regPass" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}" title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters">
+                    <button type="submit" class="submit-btn">Register</button>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            var x = document.getElementById("logForm");
+            var y = document.getElementById("regForm");
+            var z = document.getElementById("btn")
+
+            function register(){
+                x.style.left = "-400px";
+                y.style.left = "50px";
+                z.style.left = "110px";
+            }
+
+            function login(){
+                x.style.left = "50px";
+                y.style.left = "450px";
+                z.style.left = "0px";
+            }
+        </script>
+    </body>
+</html>
