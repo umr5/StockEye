@@ -223,7 +223,13 @@ async function set_currenuser_cache(type){
 }
 
 function get_accountType(){
-    return currentuser_cache.account
+    let return_val
+    if(currentuser_cache != null){
+        return_val = currentuser_cache.account
+    }else(
+        return_val = " "
+    )
+    return return_val
 }
 
 function empty_currentuser_cache(){

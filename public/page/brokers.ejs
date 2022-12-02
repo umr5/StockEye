@@ -3,23 +3,28 @@
     <head>
         <meta charset="UTF-8">
         <title>StockEye</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
     </head>
     <body>
-        <text>Brokers</text>
-        <% brokers.forEach((broker)=>{%>
-            <br>
-            <text><%=broker.UID%></text><br>
-            <text><%=broker.email%></text><br>
-            <text><%=broker.institution%></text><br>
-            <text><%=broker.username%></text><br>
-            <%if(currentuser){%>
-                <%if(checkSubscribtion(broker.UID)){%>
-                    <button disabled>Subscribed</button>
-                <%}else{%>
-                    <form action="/subscribe/<%=broker.UID%>" method="get"><button type="submit">Subscribe</button></form>
+        <div class="page">
+            <%- include('../partials/navbar')  %> 
+            <text>Brokers</text>
+            <% brokers.forEach((broker)=>{%>
+                <br>
+                <text><%=broker.UID%></text><br>
+                <text><%=broker.email%></text><br>
+                <text><%=broker.institution%></text><br>
+                <text><%=broker.username%></text><br>
+                <%if(currentuser){%>
+                    <%if(checkSubscribtion(broker.UID)){%>
+                        <button disabled>Subscribed</button>
+                    <%}else{%>
+                        <form action="/subscribe/<%=broker.UID%>" method="get"><button type="submit">Subscribe</button></form>
+                    <%}%>
                 <%}%>
-            <%}%>
-            <br>
-        <%}) %>
+                <br>
+            <%}) %>
+        </div>
     </body>
 </html>

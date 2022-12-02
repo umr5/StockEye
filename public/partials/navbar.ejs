@@ -1,0 +1,26 @@
+<head>
+    <meta charset="UTF-8">
+    <title>StockEye</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+</head>
+<body>
+    <nav>
+        <img class="logo" src="../images/StockEyeLogo2.png">
+        <h2 class="name">Stock <span>Eye</span></h2>
+        <ul>
+            <li><form id="to_home" action="/" method="get"><a href="javascript:{}" onclick="document.getElementById('to_home').submit();">Home</a></form></li>
+            <%if(userType != 'Broker'){%>
+                <li><form id="to_brokers" action="/brokers" method="get"><a href="javascript:{}" onclick="document.getElementById('to_brokers').submit();">Brokers</a></form></li>
+            <%}%>
+            <%if(currentuser){%>
+                <li><form id="to_account" action="./account/<%=currentuser.uid%>" method="get"><a href="javascript:{}" onclick="document.getElementById('to_account').submit();">Your profile</a></form></li>
+            <%}%>
+        </ul>
+        <%if(!currentuser){%>
+            <form action="./login" method="get"><button class="logReg">Login or Register</button></form>
+        <%}else{%>
+            <form action="./signOut" method="get"><button class="logReg">Sign Out</button></form>
+        <%}%>
+    </nav>
+</body>

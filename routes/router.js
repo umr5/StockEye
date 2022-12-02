@@ -62,11 +62,12 @@ router.get('/account/:id', async (req, res)=>{
 })
 
 router.get('/brokers', async (req, res)=>{
+    let userType = get_accountType()
     let brokers = [];
     await getAllBrokers().then((result)=>{
         brokers = result;
     })
-    res.render('./page/brokers', {brokers, checkSubscribtion, currentuser: auth.currentUser})
+    res.render('./page/brokers', {brokers, checkSubscribtion, currentuser: auth.currentUser, userType})
 })
 
 router.get('/subscribe/:id', (req, res)=>{

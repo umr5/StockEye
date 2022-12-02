@@ -3,42 +3,46 @@
     <head>
         <meta charset="UTF-8">
         <title>StockEye</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
     </head>
     <body>
-        <form action="/" method="get"><input type="submit" value="To Front" /></form>
-        <text>Username: <%=currentuser.displayName%></text><br>
-        <text>Email: <%=currentuser.email%></text><br>
-        <%if(userType == 'User'){%>
-            <text>Wallet: <%=currentuser.wallet%></text><br>
-        <%}%>
-        <text>uid: <%=currentuser.uid%></text><br><br>
-        <%if(userType == 'User'){%>
-            <% for( let i = 0; i < investments.length; i++ ) { %>
-                <text>>><%= investments[i].stock %></text>
-                <text>current profit: $<%=profit_function(investments[i], stock_arr[i])%></text><br>
+        <div class="page">
+            <%- include('../partials/navbar')  %> 
+            <text>Username: <%=currentuser.displayName%></text><br>
+            <text>Email: <%=currentuser.email%></text><br>
+            <%if(userType == 'User'){%>
+                <text>Wallet: <%=currentuser.wallet%></text><br>
             <%}%>
-        <%}%>
-        <br><br><br><br>
-        <%if(userType == 'User'){%>
-            <text>Your Brokers</text>
-            <% users.forEach((broker)=>{%>
-                <br>
-                <text><%=broker.UID%></text><br>
-                <text><%=broker.email%></text><br>
-                <text><%=broker.institution%></text><br>
-                <text><%=broker.username%></text><br>
-                <form action="/unsubscribe/<%=broker.UID%>" method="get"><button type="submit">unsubscribe</button></form>
-                <br>
-            <%})%>
-        <%}else if(userType == 'Broker'){%>
-            <text>Your Subscribers</text>
-            <% users.forEach((sub)=>{%>
-                <br>
-                <text><%=sub.UID%></text><br>
-                <text><%=sub.email%></text><br>
-                <text><%=sub.username%></text><br>
-                <br>
-            <%})%>
-        <%}%>
+            <text>uid: <%=currentuser.uid%></text><br><br>
+            <%if(userType == 'User'){%>
+                <% for( let i = 0; i < investments.length; i++ ) { %>
+                    <text>>><%= investments[i].stock %></text>
+                    <text>current profit: $<%=profit_function(investments[i], stock_arr[i])%></text><br>
+                <%}%>
+            <%}%>
+            <br><br><br><br>
+            <%if(userType == 'User'){%>
+                <text>Your Brokers</text>
+                <% users.forEach((broker)=>{%>
+                    <br>
+                    <text><%=broker.UID%></text><br>
+                    <text><%=broker.email%></text><br>
+                    <text><%=broker.institution%></text><br>
+                    <text><%=broker.username%></text><br>
+                    <form action="/unsubscribe/<%=broker.UID%>" method="get"><button type="submit">unsubscribe</button></form>
+                    <br>
+                <%})%>
+            <%}else if(userType == 'Broker'){%>
+                <text>Your Subscribers</text>
+                <% users.forEach((sub)=>{%>
+                    <br>
+                    <text><%=sub.UID%></text><br>
+                    <text><%=sub.email%></text><br>
+                    <text><%=sub.username%></text><br>
+                    <br>
+                <%})%>
+            <%}%>
+        </div>
     </body>
 </html>

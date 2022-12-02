@@ -193,3 +193,31 @@ nav ul li a:hover{
     text-align: center;
     border-radius: 30px;
 }
+
+.form-popup{ 
+    display: none;
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 600px;
+    padding: 50px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.30);
+    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),url(../images/backgroundImage.jpg);
+    transition: 0.5s;
+    border-radius: 30px;
+    border: 3px solid #ea1538;
+    z-index: 9;
+}
+.form-page{
+    display: none;
+    position:fixed;
+    width:200%;
+    height:200%;
+    background-color: rgba(255, 255, 255, 0.1);
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    backdrop-filter: blur(5px);
+    z-index: 8;
+}
