@@ -5,7 +5,6 @@
 }
 
 .page{
-    height: 100%;
     width: 100%;
     background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),url(../images/backgroundImage.jpg);
     background-position: center;
@@ -21,6 +20,7 @@
     background: #fff;
     padding: 5px;
     overflow: hidden;
+    border-radius: 30px;
 }
 
 .button-box{
@@ -176,4 +176,20 @@ nav ul li a:hover{
 .logo{
     padding: 10px 20px;
     width: 100px;
+}
+
+.stock-list{
+    list-style: none;
+}
+
+.stock-profile{
+    width: 80%;
+    height:auto;
+    background: #fff;
+    padding:20px;
+    margin:auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    border-radius: 30px;
 }

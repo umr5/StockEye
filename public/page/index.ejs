@@ -26,15 +26,11 @@
                 <%}%>
             </nav>
             <!--This is a list containing all the stocks -->
-            <ul>
+            <ul class="stock-list">
                 <!--uses ejs to loop through the Stocks, which are passed here from tbe router-->
                 <% Stocks.forEach(stock => {%>
+                <li class="stock-profile">
                     <text>>><%= stock.Name %></text>
-                    <%stock.Array.forEach(int => {%>
-                        <li>
-                            <text><%= int %></text>
-                        </li>
-                    <%})%>
                     <!--dynamic route, route depends on what stock you invest in-->
                     <form action='/buy/<%= stock.Name %> ' method="post">
                         <button type="submit" class="buysell-btn">Buy</button>
@@ -43,6 +39,7 @@
                     <form action="/sell/<%= stock.Name %> " method="post">
                         <button type="submit" class="buysell-btn">Sell</button>
                     </form>
+                </li>
                 <%}); %>
             </ul>
         </div>
