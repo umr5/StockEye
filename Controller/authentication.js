@@ -1,6 +1,6 @@
 import { auth } from "./firebase.js";
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateCurrentUser, updateProfile,signInWithPopup} from 'firebase/auth';
-import { addTrader, addBroker } from "../model/User.js";
+import { addTrader, addBroker, set_currenuser_cache, empty_currentuser_cache} from "../model/User.js";
 
 var user;
 
@@ -10,9 +10,10 @@ function registerTrader(email, password, username){
     .then((userCredential) => {
         updateProfile(auth.currentUser, {
           displayName: username
-        }).then((res)=>{
+        }).then(async (res)=>{
           addTrader(auth.currentUser);
-          console.log("Trader registered as " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+          console.log(auth.currentUser.uid + " Trader registered as " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+          await set_currenuser_cache('User')
         });
     })
     .catch((error) => {
@@ -25,9 +26,10 @@ function registerTrader(email, password, username){
 //logs in an existing Trader user
 function loginTrader(email, password){
     signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
       updateCurrentUser(auth, userCredential.user);
-      console.log("Trader siged in as: " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+      console.log(auth.currentUser.uid + " Trader siged in as: " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+      await set_currenuser_cache('User')
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -42,9 +44,10 @@ function registerBroker(email, password, username, institution){
   .then((userCredential) => {
       updateProfile(auth.currentUser, {
         displayName: username
-      }).then((res)=>{
+      }).then(async (res)=>{
         addBroker(auth.currentUser);
-        console.log("Broker registered as " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+        console.log(auth.currentUser.uid + " Broker registered as " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+        await set_currenuser_cache('Broker')
       });
   })
   .catch((error) => {
@@ -57,9 +60,10 @@ function registerBroker(email, password, username, institution){
 //logs in a new Broker User
 function loginBroker(email, password){
   signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
+  .then(async (userCredential) => {
     updateCurrentUser(auth, userCredential.user);
-    console.log("Broker siged in as: " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+    console.log(auth.currentUser.uid + " Broker siged in as: " + auth.currentUser.email + " with displayName: " + auth.currentUser.displayName);
+    await set_currenuser_cache('Broker')
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -68,14 +72,9 @@ function loginBroker(email, password){
   });
 }
 
-function setUser(new_user){
-  updateCurrentUser(auth, new_user);
-  console.log("New user set as " + auth.currentUser);
-}
-
 function SignOut(){
   console.log("User signed out");
   auth.signOut();
+  empty_currentuser_cache()
 }
-
-export {registerTrader, loginTrader, registerBroker, loginBroker, setUser, SignOut};
+export {registerTrader, loginTrader, registerBroker, loginBroker, SignOut};

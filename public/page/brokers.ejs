@@ -13,11 +13,11 @@
             <text><%=broker.institution%></text><br>
             <text><%=broker.username%></text><br>
             <%if(currentuser){%>
-            <%if(false){%>
-                <button disabled>Subscribed</button>
-            <%}else{%>
-                <form action="/subscribe/<%=broker.UID%>" method="get"><button type="submit">Subscribe</button></form>
-            <%}%>
+                <%if(checkSubscribtion(broker.UID)){%>
+                    <button disabled>Subscribed</button>
+                <%}else{%>
+                    <form action="/subscribe/<%=broker.UID%>" method="get"><button type="submit">Subscribe</button></form>
+                <%}%>
             <%}%>
             <br>
         <%}) %>

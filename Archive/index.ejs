@@ -1,24 +1,78 @@
-<body>
-    <Text>welcome to the main page</Text>
-    <form action="./login" method="get"><input type="submit" value="login" /></form>
-    <!--This is a list containing all the stocks -->
-    <ul>
-        <!--uses ejs to loop through the Stocks, which are passed here from tbe router-->
-        <% Stocks.forEach(stock => {%>
-            <text>>><%= stock.Name %></text>
-            <%stock.Array.forEach(int => {%>
-                <li>
-                    <text><%= int %></text>
-                </li>
-            <%})%>
-            <!--dynamic route, route depends on what stock you invest in-->
-            <form action='/buy/<%= stock.Name %> ' method="post">
-                <button type="submit" class="submit-btn">Buy</button>
-                <input id="amount" name="amount" type="text">
-            </form>
-            <form action="/sell/<%= stock.Name %> " method="post">
-                <button type="submit" class="submit-btn">Sell</button>
-            </form>
-        <%}); %>
-   </ul>
-</body>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>StockEye</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    </head>
+    <body>
+        <div class="page">
+            <nav>
+                <img class="logo" src="../images/StockEyeLogo2.png">
+                <h2 class="name">Stock <span>Eye</span></h2>
+                <ul>
+                    <li><a hred="/">Home</a></li>
+                    <li><a href="./stocks">Stocks</a></li>
+                    <li><form id="to_brokers" action="/brokers" method="get"><a href="javascript:{}" onclick="document.getElementById('to_brokers').submit();">Brokers</a></form></li>
+                    <%if(currentuser){%>
+                    <li><form id="to_account" action="./account/<%=currentuser.uid%>" method="get"><a href="javascript:{}" onclick="document.getElementById('to_account').submit();">Your profile</a></form></li>
+                    <%}%>
+                </ul>
+                <%if(!currentuser){%>
+                <form action="./login" method="get"><button class="logReg">Login or Register</button></form>
+                <%}else{%>
+                <form action="./signOut" method="get"><button class="logReg">Sign Out</button></form>
+                <%}%>
+            </nav>
+            <!--This is a list containing all the stocks -->
+                <ul>
+                    <!--uses ejs to loop through the Stocks, which are passed here from tbe router-->
+                    <% Stocks.forEach(stock => {%>
+                        <div>
+                        <text>>><%= stock.Name %></text>
+                        <%stock.Value.slice(-10).forEach(int => {%>
+                            <li>
+                                <text><%= int %></text>
+                            </li>
+                        <%})%>
+                        <!--dynamic route, route depends on what stock you invest in-->
+                        <div>
+                            <%if(currentuser){%>
+                                <%if(currentuser.account != "Broker"){%>
+                                    <button class="buysell-btn" onclick="openInvestment()">Invest</button>
+                                    <div class="form-popup" id="invest_form">
+                                        <form action='/buy/<%= stock.Name %> ' method="post">
+                                            <button type="submit" class="buysell-btn">Buy</button>
+                                            <input id="amount" name="amount" type="text">
+                                        </form>
+                                        <form action="/sell/<%= stock.Name %> " method="post">
+                                            <button type="submit" class="buysell-btn">Sell</button>
+                                        </form>
+                                            <button type="button" onclick="closeInvestment()">Close</button>
+                                    </div>
+                                <%}else{%>
+                                    <form action="/report/<%= stock.Name %>">
+                                        <button class="buysell-btn">Report</button>
+                                    </form>
+                                <%}%>
+                            <%}%>
+                            <form action="/view/<%= stock.Name %>" method="post">
+                                <button type="submit" class="buysell-btn">View</button>
+                            </form> 
+                        </div>
+                        </div>
+                    <%}); %>
+                </ul>
+        </div>
+        <script>
+            function openInvestment(){
+                document.getElementById("invest_form").style.display = "block";
+            }
+            
+            function closeInvestment(){
+                document.getElementById("invest_form").style.display = "none";
+            }
+        </script>
+    </body>
+</html>
