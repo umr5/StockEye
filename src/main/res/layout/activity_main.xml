@@ -106,9 +106,9 @@ tools:context=".MainActivity">
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/stocks_rv"
-        android:layout_width="308dp"
-        android:layout_height="253dp"
+        android:id="@+id/recyclerView"
+        android:layout_width="320dp"
+        android:layout_height="350dp"
         android:background="#252525"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

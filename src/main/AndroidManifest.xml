@@ -23,9 +23,6 @@
             android:name=".RegisterBrokerActivity"
             android:exported="false" />
         <activity
-            android:name=".ReadData"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

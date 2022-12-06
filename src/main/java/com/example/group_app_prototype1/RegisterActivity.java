@@ -109,9 +109,9 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
                 Map<String, Object> user = new HashMap<>();
-                user.put("Account", "Trader");
-                user.put("Email", email);
-                user.put("Username", fullname);
+                user.put("account", "Direct User");
+                user.put("email", email);
+                user.put("username", fullname);
 
                 db.collection("User_Traders")
                         .add(user)
