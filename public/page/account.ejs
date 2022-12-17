@@ -42,6 +42,12 @@
                     <text><%=sub.username%></text><br>
                     <br>
                 <%})%>
+                <form action="/report/<%=currentuser.uid%>" method="get">
+                    <input type="text" class="input-field" placeholder="Title" id="repTitle" name="repTitle" required>
+                    <input type="text" class="input-field" placeholder="Body" id="repBody" name="repBody" required>
+                    <input type="text" class="input-field" placeholder="STOCK" id="repStock" name="repStock" required>
+                    <button type="submit">Report</button>
+                </form>
             <%}%>
         </div>
     </body>

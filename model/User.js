@@ -115,6 +115,26 @@ async function getInvestment(){
     return {investments, users_stocks};
 }
 
+async function getReports(broker_uid){
+    const reports = [];
+    
+    const querySnapshot = await getDocs(query(collection(BrokersCol, broker_uid, 'reports')));
+    querySnapshot.forEach((doc)=>{reports.push(doc.data())});
+    
+    return reports;
+}
+
+async function createReport(title, body, stock){
+    if(currentuser_cache.account == 'Broker'){
+        addDoc(collection(BrokersCol, auth.currentUser.uid, 'reports'), {
+            body: body,
+            created_at: new Date(),
+            stock: stock,
+            title: title
+        });
+    }
+}
+
 async function getAllBrokers(){
     const brokers_arr = [];
     

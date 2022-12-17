@@ -80,7 +80,10 @@ router.get('/unsubscribe/:id', (req, res)=>{
     res.redirect('/');
 })
 
-
+router.get('/report', (req, res)=>{
+    unsubscribeFromBroker(req.params.id);
+    res.redirect('/');
+})
 
 //trader and broker logins
 router.get("/login", (req, res)=>{
