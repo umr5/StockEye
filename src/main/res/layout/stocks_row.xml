@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/tvArray"
             android:layout_marginStart="8dp"
-            android:text="array data"
+            android:text="stock prediction"
             android:textColor="@color/white"
             android:textSize="14sp"/>
 
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tvValue"
                 android:layout_marginStart="8dp"
-                android:text="Stock Prediction"
+                android:text="Stock Value"
                 android:textColor="@color/white"
                 android:textSize="14sp"/>
 

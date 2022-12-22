@@ -1,53 +1,57 @@
 package com.example.group_app_prototype1;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Stock {
 
-    String Array, Date, Name, Value;
+    String Name, account;
+    int Array, Date, Value;
 
-    public Stock(){}
 
-
-    public Stock(String Array, String Date, String Name, String Value) {
-        this.Array = Array;
-        this.Date = Date;
-        this.Name = Name;
-        this.Value = Value;
-
+    public Stock() {
     }
 
-    public String getArray() {
-        return Array;
+    public Stock(String account, String name, int array, int value) {
+        account = account;
+        Name = name;
+        Array = array;
+        Value = value;
     }
 
-    public void setArray(String Array) {
-        this.Array = Array;
+    public String getAccount() {
+        return account;
     }
 
-    public String getDate() {
-        return Date;
-    }
-
-    public void setDate(String Date) {
-        this.Date = Date;
+    public void setAccount(String account) {
+        account = account;
     }
 
     public String getName() {
         return Name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        Name = name;
     }
 
-    public String getValue() {
+    public int getArray() {
+        return Array;
+    }
+
+    public void setArray(int array) {
+        Array = array;
+    }
+
+    public int getValue() {
         return Value;
     }
 
-    public void setValue(String Value) {
-        this.Value = Value;
+    public void setValue(int value) {
+        Value = value;
     }
-
 }
+
+

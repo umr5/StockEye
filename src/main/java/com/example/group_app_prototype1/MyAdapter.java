@@ -34,10 +34,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         Stock stock = stockArrayList.get(position);
 
-        holder.Array.setText(stock.Array);
-        holder.Date.setText(stock.Date);
+        holder.Array.setText(String.valueOf(stock.Array));
+        holder.Date.setText(String.valueOf(stock.Date));
         holder.Name.setText(stock.Name);
-        holder.Value.setText(stock.Value);
+        holder.Value.setText(String.valueOf(stock.Value));
 
         // holder.age.setText(String.valueOf(user.age);     if value is not string
 

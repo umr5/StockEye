@@ -53,9 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.ProgressBar);
 
-//        if(fAuth.getCurrentUser() != null){
-//            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-//        }
 
         mRegister_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +93,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                 progressBar.setVisibility(View.VISIBLE);
 
-                // Trying something
                 fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

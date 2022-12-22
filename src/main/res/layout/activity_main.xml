@@ -20,7 +20,7 @@ tools:context=".MainActivity">
     <Button
         android:id="@+id/Register_btn1"
         android:layout_width="110dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:backgroundTint="#ea1538"
         android:text="Register"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,7 +28,7 @@ tools:context=".MainActivity">
         app:layout_constraintHorizontal_bias="0.91"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.166" />
+        app:layout_constraintVertical_bias="0.127" />
 
     <ImageView
         android:id="@+id/logo2"
@@ -39,13 +39,28 @@ tools:context=".MainActivity">
         app:layout_constraintHorizontal_bias="0.091"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.127"
+        app:layout_constraintVertical_bias="0.07"
         app:srcCompat="@drawable/stockeyelogo2" />
 
+    <!--    <Button-->
+<!--        android:id="@+id/LogOut_btn"-->
+<!--        android:layout_width="110dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:backgroundTint="#ea1538"-->
+<!--        android:text="Log Out"-->
+<!--        android:onClick="logout"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.91"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.118" />-->
+
+
     <Button
-        android:id="@+id/Log_in_btn1"
+        android:id="@+id/log_in_btn"
         android:layout_width="110dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:backgroundTint="#ea1538"
         android:text="Login"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -53,7 +68,7 @@ tools:context=".MainActivity">
         app:layout_constraintHorizontal_bias="0.91"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.118" />
+        app:layout_constraintVertical_bias="0.053" />
 
     <TextView
         android:id="@+id/textView"
@@ -68,43 +83,6 @@ tools:context=".MainActivity">
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.772" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/Nav_bar"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:background="#EA1538"
-        app:tabSelectedTextColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.004">
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/Home_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Home" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/Account_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Account" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/Help_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Help" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/Broker_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Broker" />
-    </com.google.android.material.tabs.TabLayout>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="320dp"
@@ -118,5 +96,32 @@ tools:context=".MainActivity">
         app:layout_constraintVertical_bias="0.654">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Home"
+        android:textSize="30sp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.966" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/Nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/purple_200"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
