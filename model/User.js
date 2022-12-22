@@ -17,7 +17,8 @@ async function addTrader(user){
         username: user.displayName,
         email: user.email,
         Brokers: [],
-        wallet: 0
+        wallet: 0,
+        watchlist: []
     });
 };
 
@@ -29,7 +30,8 @@ async function addBroker(user){
         username: user.displayName,
         email: user.email,
         institution: "IBA", //this is temporary
-        Traders: []
+        Traders: [],
+        watchlist: []
     });
 };
 
@@ -170,6 +172,48 @@ async function getBrokersUsers(){
     }   
     return trader_docs;
 }
+async function getWatchlistStocks(){
+    if(auth.currentUser){
+        if(get_accountType() == 'User'){
+            const docRef = doc(TradersCol, auth.currentUser.uid);
+            const docSnap = await getDoc(docRef);
+            let watchlist = [];
+            console.log(docSnap.data())
+            if(docSnap.data().watchlist != null){
+                for await (const stock of docSnap.data().watchlist){
+                    const stockdoc = await getStock(stock)
+                    watchlist.push(stockdoc);
+                }
+                return watchlist;
+            }  
+        } 
+    }
+}
+
+async function addToWatchlist(stock){
+    const docRef = doc(TradersCol, auth.currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    let watchlist = []
+    if(docSnap.data().Brokers){
+        watchlist = docSnap.data().watchlist;
+    }
+    watchlist.push(stock);
+    updateDoc(docRef, {watchlist: watchlist});
+    await set_currenuser_cache('User');
+}
+
+async function removeFromWatchlist(stock){
+    const docRef = doc(TradersCol, auth.currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    let watchlist = []
+    if(docSnap.data().Brokers){
+        watchlist = docSnap.data().watchlist;
+    }
+    watchlist = watchlist.filter(e => e !== stock);
+    updateDoc(docRef, {watchlist: watchlist});
+    await set_currenuser_cache('User');
+}
+
 async function subscribeToBroker(broker_uid){
     const docRef = doc(TradersCol, auth.currentUser.uid);
     const docSnap = await getDoc(docRef);
@@ -226,6 +270,12 @@ function checkSubscribtion(broker_uid){
     check = arr.includes(broker_uid);  
     return check;
 }
+function checkWatchList(name){
+    let check;
+    let arr = currentuser_cache.watchlist;
+    check = arr.includes(name.toUpperCase());
+    return check;
+}
 
 async function set_currenuser_cache(type){
     let docRef;
@@ -240,6 +290,7 @@ async function set_currenuser_cache(type){
         currentuser_cache = res.data();
         console.log(currentuser_cache)
     });
+    console.log(currentuser_cache)
 }
 
 function get_accountType(){
@@ -258,4 +309,4 @@ currentuser_cache = null;
 
 export {addTrader, addBroker, buyStock, sellStock, getInvestment, getAllBrokers, getUsersBrokers, getBrokersUsers,
         subscribeToBroker, unsubscribeFromBroker, checkSubscribtion, set_currenuser_cache, empty_currentuser_cache,
-        get_accountType};
+        get_accountType, getWatchlistStocks, addToWatchlist, checkWatchList, removeFromWatchlist};

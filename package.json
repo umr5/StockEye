@@ -11,6 +11,7 @@
   "type": "module",
   "license": "ISC",
   "dependencies": {
+    "chart.js": "^4.1.1",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "firebase": "^9.12.1",

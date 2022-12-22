@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>StockEye</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    </head>
+    <%- include('../partials/navbar')  %> 
+    <body>
+        <div class="page" id="page">
+            <%- include('../partials/accounts')  %> 
+            <div class="center-section">
+                <div class="section-title">
+                    <p>Frequently Asked Questions</p>
+                </div>
+                <div class="FAQ">
+                    <div class="question"><p>How do I open an account on your platform?</p></div>
+                    <div class="answer"><p>To open an account on our platform, simply visit our website and click on the "Sign Up" button. Follow the prompts to complete the registration process and provide the required information and documentation.</p></div>
+                </div>
+                <div class="FAQ">
+                    <div class="question"><P>How do I place a trade?</P></div>
+                    <div class="answer"><P>To place a trade, log in to your account and navigate to the front page. Select the stock you wish to trade and press "Invest" enter the desired quantity and order type. Review and confirm the details of your trade before submitting it.</P></div>
+                </div>
+                <div class="FAQ">
+                    <div class="question"><p>How do I deposit or withdraw funds from my account?</p></div>
+                    <div class="answer"><p>To deposit or withdraw funds from your account, log in and navigate to the account page. Select the desired action under the funds section and follow the prompts to complete the process. Please note that there may be fees associated with these transactions, and that certain funding methods may not be available in all regions.</p></div>
+                </div>
+                <div class="FAQ">
+                    <div class="question"><p>How do I view my account balance and trade history?</p></div>
+                    <div class="answer"><p>To view your account balance and trade history, log in and navigate to the "Account" page. Here you can find information about your available cash balance, and a record of your recent trades.</p></div>
+                </div>
+                <div class="FAQ">
+                    <div class="question"><p>What fees do you charge for trading?</p></div>
+                    <div class="answer"><p>Our trading fees depend on the type of account you have and the volume of trades you place, aswell any association with a broker.</p></div>
+                </div>
+                <div class="section-title">
+                    <p>Support Form</p>
+                </div>
+                <div class="support-profile">
+                    <form class="support-form">
+                        <label for="name">Name:</label><br>
+                        <input type="text" id="name" name="name"><br>
+                        <label for="email">Email:</label><br>
+                        <input type="email" id="email" name="email"><br>
+                        <label for="subject">Subject:</label><br>
+                        <input type="text" id="subject" name="subject"><br>
+                        <label for="message">Message:</label><br>
+                        <textarea id="message" name="message" rows="5" cols="50"></textarea><br>
+                        <input type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+            <%- include('../partials/notifs')  %> 
+        </div>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>StockEye</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    </head>
+    <%- include('../partials/navbar')  %> 
+    <body>
+        <div class="page">
+            <%- include('../partials/accounts')  %> 
+            <div class="report-section">
+                <form action="/send-report/<%=currentuser.uid%>" method="get">
+                    <div class="selection">
+                        <select class="input-field" required>
+                            <option value="0">Select Stock</option>
+                        </select>
+                        <input type="text" class="input-field" placeholder="No Client" id="noClient" name="noClient" disabled>
+                    </div>
+                    <div class="text-form">
+                        <input type="text" class="input-field" placeholder="Title" id="repTitle" name="repTitle" required>
+                        <textarea class="input-textarea" placeholder="Body" id="repBody" name="repBody" required></textarea>
+                    </div>
+                    <button type="submit">Report</button>
+                </form>
+            </div>
+            <%- include('../partials/notifs')  %> 
+        </div>
+    </body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>StockEye</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+    <%- include('../partials/navbar') %>
+    <body>
+        <div class="page" id="page">
+            <%- include('../partials/accounts') %>
+                <div class="center-section">
+                    <%if(stock != undefined){%>
+                    <div class="section-title">
+                        <p>
+                            <%=stock.Name%>
+                        </p>
+                    </div>
+                    <div class="single-stock-profile">
+                        <script>
+                            let skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
+                            let down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
+                            let predic = (ctx, value) => ctx.p0DataIndex > 28 ? value : undefined;
+                        </script>
+                        <div>
+                            <div class="single-stock-value">
+                                <P class="single-stock-value-actual">Actual <span><%=Math.round(stock.Value.slice(-1)*100)/100%></span></P>
+                                <P class="single-stock-value-predic">10D Prediction <span><%=Math.round(stock.Array.slice(-1)*100)/100%></span></P>
+                            </div>
+                            <div class="single-stock-graph" id="graph-div-<%= stock.Name %>">
+                                <canvas id="chart<%= stock.Name %>" class="chart"></canvas>
+                            </div>
+                            <script>
+                                var ctx = document.getElementById("chart<%=stock.Name%>");
+                                var context = ctx.getContext("2d");
+                                var parent = document.getElementById("graph-div-<%=stock.Name %>");
+                                ctx.width = parent.offsetWidth;
+                                ctx.height = parent.offsetHeight;
+                                var data = "<%=stock.Value.slice(-30)+','+stock.Array%>".split(',')
+                                var labels = Array.from(Array(40).keys())//"<%=stock.Date.slice(-30)%>".split(',')
+                                let chart = new Chart("chart<%=stock.Name%>", {
+                                    type: "line",
+                                    data: {
+                                        labels: labels,
+                                        datasets: [{
+                                            fill: true,
+                                            lineTension: 0,
+                                            backgroundColor: "rgb(0, 200, 0, 0.2)",
+                                            borderColor: "rgb(0, 200, 0)",
+                                            data: data,
+                                            segment: {
+                                                borderColor: ctx => predic(ctx, 'rgb(0,0,200)') || down(ctx, 'rgb(200, 0, 0)'),
+                                                backgroundColor: ctx => predic(ctx, 'rgb(0,0,255,0.2') || down(ctx, 'rgb(255, 0, 0, 0.2)'),
+                                                borderDash: ctx => skipped(ctx, [6, 6]),
+                                            },
+                                            spanGaps: true
+                                        }]
+                                    },
+                                    options: {
+                                        plugins: {
+                                            legend: {
+                                                display: false
+                                            }
+                                        },
+                                        fill: false,
+                                        interaction: {
+                                            intersect: false
+                                        },
+                                        radius: 0,
+                                        scales: {
+                                            x: {
+                                                display: false
+                                            },
+                                            y: {
+                                                display: false
+                                            }
+                                        }
+                                    }
+                                });
+                            </script>
+                            <script>
+                                function updateTime(time){
+                                    predic = (ctx, value) => ctx.p0DataIndex > time-2 ? value : undefined;
+                                    if(time == -1){
+                                        let data = "<%=stock.Value+','+stock.Array%>".split(',')
+                                        time = data.length -10
+                                        chart.data.datasets[0].data = data
+                                        chart.data.labels = Array.from(Array(data.length).keys())
+                                        chart.update();
+                                    }else{
+                                        let data = "<%=stock.Value+','+stock.Array%>".split(',')
+                                        let updated_data = data.slice((time+10)*-1)
+                                        let updated_labels = Array.from(Array(time+10).keys())
+                                        console.log(updated_data)
+                                        console.log(updated_labels)
+                                        chart.data.datasets[0].data = updated_data
+                                        chart.data.labels = updated_labels
+                                        chart.update();
+                                    }
+                                    
+                                }
+                            </script>
+                            <div class="single-stock-graphControls">
+                                <ul class="time-list">
+                                    <li class="time-list-item"><button onclick="updateTime(7)">1W</button></li>
+                                    <li class="time-list-item"><button onclick="updateTime(30)">1M</button></li>
+                                    <li class="time-list-item"><button onclick="updateTime(120)">6M</button></li>
+                                    <li class="time-list-item"><button onclick="updateTime(365)">1Y</button></li>
+                                    <li class="time-list-item"><button onclick="updateTime(-1)">MAX</button></li>
+                                </ul>
+                            </div>
+                            <div class="single-stock-info">
+                                <div>
+                                    <p>Prev. Close <span><%=Math.round(stock.Value.slice(-2)[0]*100)/100%></span></p>
+                                    <p>Week's Range <span><%=Math.round(Math.min.apply(Math,stock.Value.slice(-7))*100)/100%> - <%=Math.round(Math.max.apply(Math, stock.Value.slice(-7))*100)/100%></span></p>
+                                </div>
+                                <div>
+                                    <p>52W Range <span><%=Math.round(Math.min.apply(Math,stock.Value.slice(-364))*100)/100%> - <%=Math.round(Math.max.apply(Math, stock.Value.slice(-364))*100)/100%></span></p>
+                                    <p>1Y Return <span><%=Math.round(((stock.Value.slice(-364)[0] - stock.Value.slice(-364).slice(-1)) / stock.Value.slice(-364).slice(-1) * 100)*-100)/100;%>%</span></p>
+                                </div>
+                            </div>
+                            <div class="single-stock-buttons">
+                                <%if(currentuser){%>
+                                    <%if(userType != 'Broker'){%>
+                                        <button class="buysell-btn" onclick=<%="openInvestment('"+stock.Name+"')"%>>Invest</button>
+                                        <div class="form-page" id="form_page<%= stock.Name %>"></div>
+                                        <div class="form-popup" id="invest_form<%= stock.Name %>">
+                                            <text><%= stock.Name %></text>
+                                            <form action='/buy/<%= stock.Name %> ' method="post">
+                                                <button type="submit" class="buysell-btn">Buy</button>
+                                                <input id="amount" name="amount" type="text">
+                                            </form>
+                                            <form action="/sell/<%= stock.Name %> " method="post">
+                                                <button type="submit" class="buysell-btn">Sell</button>
+                                            </form>
+                                                <button type="button" onclick=<%="closeInvestment('"+stock.Name+"')"%>>Close</button>
+                                        </div>
+                                            <%if(checkWatchList(stock.Name)){%>
+                                                <form action="/unwatch/<%= stock.Name%>" method="get">
+                                                    <button class="buysell-btn-disabled" type="submit">Remove from watchlist</button>
+                                                </form>
+                                            <% } else { %>
+                                                <form action="/watch/<%= stock.Name%>" method="get">
+                                                    <button class="buysell-btn" type="submit">Add to watchlist</button>
+                                                </form>
+                                            <%}%>
+                                    <%}%>
+                                <%}%>
+                            </div>
+                        </div>
+                    </div>
+                    <%}%>
+                </div>
+                <%- include('../partials/notifs') %>
+    </body>
+    <script>
+        function openInvestment(name){
+            document.getElementById("form_page"+name).style.display = "block";
+            document.getElementById("invest_form"+name).style.display = "block";
+        }
+        
+        function closeInvestment(name){
+            document.getElementById("form_page"+name).style.display = "none";
+            document.getElementById("invest_form"+name).style.display = "none";
+        }
+    </script>
+</html>

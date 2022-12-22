@@ -5,50 +5,120 @@
         <title>StockEye</title>
         <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
         <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>      
     </head>
+    <%- include('../partials/navbar')  %> 
     <body>
         <div class="page" id="page">
-            <%- include('../partials/navbar')  %> 
-            <!--This is a list containing all the stocks -->
-            <ul class="stock-list">
-                <!--uses ejs to loop through the Stocks, which are passed here from tbe router-->
-                <% Stocks.forEach(stock => {%>
-                    <div>
-                        <li class="stock-profile">
-                            <text><%= stock.Name %></text>
-                            <div>
-                                <!--dynamic route, route depends on what stock you invest in-->
-                                <%if(currentuser){%>
-                                    <%if(userType != 'Broker'){%>
-                                        <button class="buysell-btn" onclick=<%="openInvestment('"+stock.Name+"')"%>>Invest</button>
-                                        <div class="form-page" id="form_page<%= stock.Name %>"></div>
-                                        <div class="form-popup" id="invest_form<%= stock.Name %>">
-                                            <text><%= stock.Name %></text>
-                                            <form action='/buy/<%= stock.Name %> ' method="post">
-                                                <button type="submit" class="buysell-btn">Buy</button>
-                                                <input id="amount" name="amount" type="text">
-                                            </form>
-                                            <form action="/sell/<%= stock.Name %> " method="post">
-                                                <button type="submit" class="buysell-btn">Sell</button>
-                                            </form>
-                                                <button type="button" onclick=<%="closeInvestment('"+stock.Name+"')"%>>Close</button>
-                                        </div>
-                                    <%}%>
-                                <%}%>
-                                <form action="/view/<%= stock.Name %>" method="post">
-                                    <button type="submit" class="buysell-btn">View</button>
-                                </form> 
-                            </div>
-                        </li>
-                    </div>
-                <%}); %>
-            </ul>
+            <%- include('../partials/accounts')  %> 
+            <div class="center-section">
+                <div class="section-title">
+                    <p>Assets</p>
+                </div>
+                <!--This is a list containing all the stocks -->
+                <ul class="stock-list">
+                    <script>
+                        const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
+                        const down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
+                        const predic = (ctx, value) => ctx.p0DataIndex > 28 ? value : undefined;
+                    </script>
+                    <% Stocks.forEach(stock => {%>
+                        <div>
+                            <li class="stock-profile">
+                                    <div class="stock-profile-name">
+                                        <p><%= stock.Name %></p>
+                                    </div>
+                                    <div class="stock-profile-graph" id="graph-div-<%= stock.Name %>">
+                                        <canvas id="chart<%= stock.Name %>" class="chart"></canvas>
+                                    </div>
+                                    <script>
+                                        var ctx = document.getElementById("chart<%=stock.Name%>");
+                                        var context = ctx.getContext("2d");
+                                        var parent = document.getElementById("graph-div-<%=stock.Name %>");
+                                        ctx.width = parent.offsetWidth;
+                                        ctx.height = parent.offsetHeight;
+                                        
+                                        var data = "<%=stock.Value.slice(-30)+','+stock.Array%>".split(',')
+                                        var labels = Array.from(Array(40).keys())//"<%=stock.Date.slice(-30)%>".split(',')
+                                        new Chart("chart<%=stock.Name%>", {
+                                            type: "line",
+                                            data: {
+                                                labels: labels,
+                                                datasets: [{
+                                                    fill: true,
+                                                    lineTension: 0,
+                                                    backgroundColor: "rgb(0, 200, 0, 0.2)",
+                                                    borderColor: "rgb(0, 200, 0)",
+                                                    data: data,
+                                                    segment: {
+                                                        borderColor: ctx => predic(ctx, 'rgb(0,0,200)') || down(ctx, 'rgb(200, 0, 0)'),
+                                                        backgroundColor: ctx => predic(ctx, 'rgb(0,0,255,0.2') || down(ctx, 'rgb(255, 0, 0, 0.2)'),
+                                                        borderDash: ctx => skipped(ctx, [6, 6]),
+                                                    },
+                                                    spanGaps: true
+                                                }]
+                                            },
+                                            options: {
+                                                plugins: {
+                                                    legend: {
+                                                        display: false
+                                                    }
+                                                },
+                                                fill: false,
+                                                interaction: {
+                                                    intersect: false
+                                                },
+                                                radius: 0,
+                                                scales:{
+                                                    x:{
+                                                        display: false
+                                                    },
+                                                    y:{
+                                                        display: false
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    </script>
+                                    <div class="stock-profile-value">
+                                        <P class="stock-profile-value-actual"><%=Math.round(stock.Value.slice(-1)*100)/100%></P>
+                                        <P class="stock-profile-value-predic"><%=Math.round(stock.Array.slice(-1)*100)/100%></P>
+                                    </div>
+                                    <div class="stock-profile-buttons">
+                                        <form action="/view/<%= stock.Name %>" method="GET">
+                                            <button type="submit" class="buysell-btn">View</button>
+                                        </form> 
+                                        <%if(currentuser){%>
+                                            <%if(userType != 'Broker'){%>
+                                                <button class="buysell-btn" onclick=<%="openInvestment('"+stock.Name+"')"%>>Invest</button>
+                                                <div class="form-page" id="form_page<%= stock.Name %>"></div>
+                                                <div class="form-popup" id="invest_form<%= stock.Name %>">
+                                                    <text><%= stock.Name %></text>
+                                                    <form action='/buy/<%= stock.Name %> ' method="post">
+                                                        <button type="submit" class="buysell-btn">Buy</button>
+                                                        <input id="amount" name="amount" type="text">
+                                                    </form>
+                                                        <button class="buysell-btn" type="button" onclick=<%="closeInvestment('"+stock.Name+"')"%>>Close</button>
+                                                </div>
+                                            <%}else{%>
+                                                <form action="/report/<%= stock.Name %>" method="GET">
+                                                    <button type="submit" class="buysell-btn">Report</button>
+                                                </form> 
+                                            <%}%>
+                                        <%}%>
+                                    </div>
+                            </li>
+                        </div>
+                    <%}); %>
+                </ul>
+            </div>
+            <%- include('../partials/notifs')  %> 
         </div>
     </body>
     <script>
         function openInvestment(name){
             document.getElementById("form_page"+name).style.display = "block";
-            document.getElementById("invest_form"+name).style.display = "block";
+            document.getElementById("invest_form"+name).style.display = "flex";
         }
         
         function closeInvestment(name){

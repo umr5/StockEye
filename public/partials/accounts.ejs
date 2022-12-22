@@ -1,0 +1,47 @@
+<div class="account-section">
+    <%if(currentuser){%>
+        <%if(userType=='Broker' ){%>
+            <div class="section-title">
+                <p>Subscribers</p>
+            </div>
+            <ul class="account-list">
+                <% accounts.forEach(trader=> { %>
+                    <li>
+                        <div class="account-list-item">
+                            <img src="../images/blank-pfp.png">
+                            <p>
+                                <%=trader.username%>
+                            </p>
+                            <form action="/private-report/<%=trader.UID%>"><button type="submit">Report</button></form>
+                        </div>
+                    </li>
+                <% }) %>
+            </ul>
+        <%}%>
+        <%if(userType=='User' ){%>
+            <div class="section-title">
+                <p>Your Brokers</p>
+            </div>
+            <ul class="account-list">
+                <% accounts.forEach(broker=> { %>
+                    <li>
+                        <div class="account-list-item">
+                            <div>
+                                <img src="../images/blank-pfp.png">
+                            </div>
+                            <div class="info">
+                                <p>
+                                    <%=broker.username%>
+                                </p>
+                                <div class="broker-additional">
+                                    <p><%=broker.institution%></p>
+                                    <form><button type="submit">Contact</button></form>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                <% }) %>
+            </ul>
+        <%}%>
+    <%}%>
+</div>

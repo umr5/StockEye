@@ -1,0 +1,66 @@
+<div class="notifs-section">
+    <div class="notifs nav-div">
+        <div class="section-title">
+            <p>Notifications</p>
+        </div>
+        <ul class="notify-list">
+            <% notifications.forEach(stock=> { %>
+                <% if(stock.val==-1){%>
+                    <li class="notify-list-item">
+                        <form id="to_view-<%=stock.stock.Name%>" action="/view/<%= stock.stock.Name %>" method="get">
+                            <a href="javascript:{}" onclick="document.getElementById('to_view-<%=stock.stock.Name%>').submit();">
+                                <p class="notifcation"><%=stock.stock.Name%></p>
+                            </a>
+                        </form>
+                        <span class="notify-perc-down">
+                            <%=stock.perc%>%
+                        </span>
+                        <span class="notify-notifier-down">
+                            &#8595;
+                        </span>
+                    </li>
+                <%}%>
+                    <% if(stock.val==1){%>
+                            <li class="notify-list-item">
+                                <form id="to_view-<%=stock.stock.Name%>" action="/view/<%= stock.stock.Name %>" method="get">
+                                    <a href="javascript:{}" onclick="document.getElementById('to_view-<%=stock.stock.Name%>').submit();">
+                                        <p class="notifcation"><%=stock.stock.Name%></p>
+                                    </a>
+                                </form>
+                                <span class="notify-perc-up">
+                                    <%=stock.perc%>%
+                                </span>
+                                <span class="notify-notifier-up">
+                                    &#8593;
+                                </span>
+                            </li>
+                    <%}%>
+            <% }) %>
+        </ul>
+    </div>
+    <%if(currentuser){%>
+        <%if(userType != 'Broker'){%>
+            <div class="watchlist nav-div">
+                <div class="section-title">
+                    <p>Watchlist</p>
+                </div>
+                <ul class="watch-list">
+                    <% watchlist.forEach(stock=> { %>
+                        <li class="notify-list-item">
+                            <form id="to_view-<%=stock.Name%>" action="/view/<%= stock.Name %>" method="get">
+                                <a href="javascript:{}" onclick="document.getElementById('to_view-<%=stock.Name%>').submit();">
+                                    <p class="notifcation">
+                                        <%=stock.Name%>
+                                    </p>
+                                </a>
+                            </form>
+                            <span class="notify-perc-nute">
+                                <%=Math.round(stock.Value.slice(-1)*100)/100%>
+                            </span>
+                        </li>
+                    <% }) %>
+                </ul>
+            </div>
+        <%}%>
+    <%}%>
+</div>

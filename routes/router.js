@@ -1,8 +1,9 @@
 import express from 'express';
 import path from 'path';
 import * as stockController from '../model/stocks.js';
+import * as userController from '../model/User.js';
 import { auth } from "../Controller/firebase.js";
-import { buyStock, sellStock, getInvestment, getAllBrokers, getUsersBrokers, subscribeToBroker, checkSubscribtion, unsubscribeFromBroker, get_accountType, getBrokersUsers} from '../model/User.js';
+import { buyStock, sellStock, getInvestment, getAllBrokers, getUsersBrokers, subscribeToBroker, checkSubscribtion, checkWatchList, unsubscribeFromBroker, get_accountType, getBrokersUsers} from '../model/User.js';
 import { registerTrader, registerBroker, loginTrader, loginBroker, SignOut} from '../Controller/authentication.js';
 import { getProfit, detectPriceMovement } from '../model/stocks.js';
 
@@ -18,17 +19,34 @@ router.use((req,res,next)=>{console.log("router>>>",req.method,req.url,req.body)
 //getting login.html at '/' , later this will have to be replaced with the main page
 router.get('/', async (req, res)=>{ 
 let userType = "";
+let changed;
+let accounts = [];
     if(auth.currentUser){
         userType = get_accountType()
+        if(userType == 'Broker'){
+            await getBrokersUsers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }else if(userType == 'User'){
+            await getUsersBrokers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }
     }
-    let stocks = [];
-    stockController.getAllStocks()
+    let Stocks = [];
+    await stockController.getAllStocks()
         .then((result)=>{
-            stocks = result;
-            let changed = detectPriceMovement(stocks)
-            console.log(changed)
-            res.render('./page/index.ejs', { root: __dirname, Stocks: stocks, currentuser: auth.currentUser, userType});
+            Stocks = result;
         })
+    let watchlist = [];
+    await userController.getWatchlistStocks()
+        .then((result)=>{
+            watchlist = result;
+        });
+    changed = detectPriceMovement(Stocks)
+    res.render('./page/index.ejs', { root: __dirname, Stocks, currentuser: auth.currentUser, userType, notifications: changed, accounts, watchlist});
 });
 
 router.get('/signOut', (req, res)=>{
@@ -39,9 +57,10 @@ router.get('/signOut', (req, res)=>{
 //router to users account page
 router.get('/account/:id', async (req, res)=>{
     let userType = get_accountType()
-    let users = [];
     let investments = [];
     let stock_arr = [];
+    let changed;
+    let users = [];
     if(userType == "User"){
         await getUsersBrokers()
             .then((result)=>{
@@ -58,31 +77,176 @@ router.get('/account/:id', async (req, res)=>{
                 users = result;
             })
     }
-    res.render('./page/account', {currentuser: auth.currentUser, investments, stock_arr, profit_function: getProfit, users, userType});
+    await stockController.getAllStocks()
+    .then((result)=>{
+        changed = detectPriceMovement(result)
+    })
+    let watchlist = [];
+    await userController.getWatchlistStocks()
+        .then((result)=>{
+            watchlist = result;
+        });
+    res.render('./page/account', {currentuser: auth.currentUser,investments,Stocks: stock_arr, profit_function: getProfit, users, userType, notifications: changed, watchlist});
+})
+
+router.get('/help', async (req, res)=>{
+    let userType = get_accountType()
+    let changed;
+    let accounts = [];
+    if(auth.currentUser){
+        userType = get_accountType()
+        if(userType == 'Broker'){
+            await getBrokersUsers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }else if(userType == 'User'){
+            await getUsersBrokers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }
+    }
+    await stockController.getAllStocks()
+    .then((result)=>{
+        changed = detectPriceMovement(result)
+    })
+    let watchlist = [];
+    await userController.getWatchlistStocks()
+        .then((result)=>{
+            watchlist = result;
+        });
+    res.render('./page/help', {currentuser: auth.currentUser, userType, notifications: changed, accounts, watchlist})
+})
+
+router.get('/view/:id', async (req, res)=>{
+    let userType = get_accountType()
+    let changed;
+    let stock;
+    let accounts = [];
+    if(auth.currentUser){
+        userType = get_accountType()
+        if(userType == 'Broker'){
+            await getBrokersUsers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }else if(userType == 'User'){
+            await getUsersBrokers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }
+    }
+    await stockController.getAllStocks()
+    .then((result)=>{
+        changed = detectPriceMovement(result)
+    })
+    await stockController.getStock(req.params.id)
+        .then((result)=>{
+            stock = result;
+        })
+    let watchlist = [];
+    await userController.getWatchlistStocks()
+        .then((result)=>{
+            watchlist = result;
+        });
+    console.log(stock);
+    res.render('./page/stock', {currentuser: auth.currentUser, userType, notifications: changed, stock, accounts, watchlist, checkWatchList})
 })
 
 router.get('/brokers', async (req, res)=>{
     let userType = get_accountType()
     let brokers = [];
+    let changed;
+    let accounts = [];
+    if(auth.currentUser){
+        userType = get_accountType()
+        if(userType == 'Broker'){
+            await getBrokersUsers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }else if(userType == 'User'){
+            await getUsersBrokers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }
+    }
     await getAllBrokers().then((result)=>{
         brokers = result;
     })
-    res.render('./page/brokers', {brokers, checkSubscribtion, currentuser: auth.currentUser, userType})
+    await stockController.getAllStocks()
+    .then((result)=>{
+        changed = detectPriceMovement(result)
+    })
+    let watchlist = [];
+    await userController.getWatchlistStocks()
+        .then((result)=>{
+            watchlist = result;
+        });
+    res.render('./page/brokers', {brokers, checkSubscribtion, currentuser: auth.currentUser, userType, notifications: changed, accounts, watchlist})
 })
 
 router.get('/subscribe/:id', (req, res)=>{
     subscribeToBroker(req.params.id);
-    res.redirect('/');
+    setTimeout(async ()=>{res.redirect('/brokers');}, 4000);
 })
 
 router.get('/unsubscribe/:id', (req, res)=>{
     unsubscribeFromBroker(req.params.id);
-    res.redirect('/');
+    setTimeout(async ()=>{res.redirect('/brokers');}, 4000);
 })
 
-router.get('/report', (req, res)=>{
-    unsubscribeFromBroker(req.params.id);
-    res.redirect('/');
+router.get('/report/:id', async (req, res)=>{
+    let userType = get_accountType()
+    let changed;
+    let accounts = [];
+    if(auth.currentUser){
+        userType = get_accountType()
+        if(userType == 'Broker'){
+            await getBrokersUsers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }else if(userType == 'User'){
+            await getUsersBrokers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }
+    }
+    await stockController.getAllStocks()
+    .then((result)=>{
+        changed = detectPriceMovement(result)
+    })
+    res.render('./page/report', {notifications: changed, accounts, userType,  currentuser: auth.currentUser});
+})
+
+router.get('/private-report/:id', async (req, res)=>{
+    let userType = get_accountType()
+    let changed;
+    let accounts = [];
+    if(auth.currentUser){
+        userType = get_accountType()
+        if(userType == 'Broker'){
+            await getBrokersUsers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }else if(userType == 'User'){
+            await getUsersBrokers()
+                .then((result)=>{
+                    accounts = result;
+                })
+        }
+    }
+    await stockController.getAllStocks()
+    .then((result)=>{
+        changed = detectPriceMovement(result)
+    })
+    res.render('./page/report', {notifications: changed, accounts, userType,  currentuser: auth.currentUser});
 })
 
 //trader and broker logins
@@ -141,6 +305,18 @@ router.post('/sell/:id', (req, res,)=>{
         console.log("User " + auth.currentUser.displayName + " selling " + req.params.id);
         sellStock(req.params.id);
         res.redirect('/');
+    }
+})
+router.get('/watch/:id', (req, res)=>{
+    if(auth.currentUser){
+        userController.addToWatchlist(req.params.id);
+        res.redirect('/view/'+req.params.id);
+    }
+})
+router.get('/unwatch/:id', (req, res)=>{
+    if(auth.currentUser){
+        userController.removeFromWatchlist(req.params.id);
+        res.redirect('/view/'+req.params.id);
     }
 })
 

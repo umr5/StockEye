@@ -6,25 +6,36 @@
         <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
         <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
     </head>
+    <%- include('../partials/navbar')  %> 
     <body>
         <div class="page">
-            <%- include('../partials/navbar')  %> 
-            <text>Brokers</text>
-            <% brokers.forEach((broker)=>{%>
-                <br>
-                <text><%=broker.UID%></text><br>
-                <text><%=broker.email%></text><br>
-                <text><%=broker.institution%></text><br>
-                <text><%=broker.username%></text><br>
-                <%if(currentuser){%>
-                    <%if(checkSubscribtion(broker.UID)){%>
-                        <button disabled>Subscribed</button>
-                    <%}else{%>
-                        <form action="/subscribe/<%=broker.UID%>" method="get"><button type="submit">Subscribe</button></form>
-                    <%}%>
-                <%}%>
-                <br>
-            <%}) %>
+            <%- include('../partials/accounts')  %> 
+            <div class="center-section">
+                <div class="section-title">
+                    <p>brokers</p>
+                </div>
+                <ul class="broker-list">
+                    <% brokers.forEach((broker)=>{%>
+                        <il class="broker-list-item">
+                            <div class="broker-banner"><img src="../images/blank-pfp.png"><p><%=broker.username%></p></div>
+                            <div class="broker-additional">
+                                <p><%=broker.email%></p>
+                                <p><%=broker.institution%></p>
+                                <form><button type="submit" class="sub-btn">Contact</button></form>
+                            </div>
+                            <p class="desc">Description</p>
+                            <%if(currentuser){%>
+                                <%if(checkSubscribtion(broker.UID)){%>
+                                    <button disabled class="subbed-btn">Subscribed</button>
+                                <%}else{%>
+                                    <form action="/subscribe/<%=broker.UID%>" method="get"><button type="submit" class="sub-btn">Subscribe</button></form>
+                                <%}%>
+                            <%}%>
+                        </il>
+                    <%}) %>
+                </ul>
+            </div>
+            <%- include('../partials/notifs')  %> 
         </div>
     </body>
 </html>

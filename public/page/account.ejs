@@ -5,50 +5,174 @@
         <title>StockEye</title>
         <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
         <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
+    <%- include('../partials/navbar')  %> 
     <body>
         <div class="page">
-            <%- include('../partials/navbar')  %> 
-            <text>Username: <%=currentuser.displayName%></text><br>
-            <text>Email: <%=currentuser.email%></text><br>
-            <%if(userType == 'User'){%>
-                <text>Wallet: <%=currentuser.wallet%></text><br>
-            <%}%>
-            <text>uid: <%=currentuser.uid%></text><br><br>
-            <%if(userType == 'User'){%>
-                <% for( let i = 0; i < investments.length; i++ ) { %>
-                    <text>>><%= investments[i].stock %></text>
-                    <text>current profit: $<%=profit_function(investments[i], stock_arr[i])%></text><br>
+            <div class="user-section">
+                <div class="user-banner">
+                    <div class="user-banner-left">
+                        <div class="user-banner-pfp">
+                            <img src="../images/blank-pfp.png">
+                        </div>
+                        <div class="user-banner-info">
+                            <p class="user-banner-info-name"><%=currentuser.displayName%></p>
+                            <p class="user-banner-info-email"><%=currentuser.email%></p>
+                        </div>
+                    </div>
+                        <%if(userType == 'User'){%>
+                            <div class="user-banner-funds">
+                                <p class="user-banner-funds-wallet">Wallet: <%=currentuser.wallet%></p>
+                            </div>
+                        <%}%>
+                </div>
+                <%if(userType == 'User'){%>
+                <div class="user-section-title">
+                    <p>Investments</p>
+                </div>
+                <ul class="user-section-investments">
+                    <script>
+                        const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
+                        const down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
+                        const predic = (ctx, value) => ctx.p0DataIndex > 28 ? value : undefined;
+                    </script>
+                    <% Stocks.forEach(stock => {%>
+                        <div>
+                            <li class="user-section-investments-item">
+                                    <div class="investment-name">
+                                        <p><%= stock.Name %></p>
+                                    </div>
+                                    <div class="investment-graph" id="graph-div-<%= stock.Name %>">
+                                        <canvas id="chart<%= stock.Name %>" class="chart"></canvas>
+                                    </div>
+                                    
+                                    <script>
+                                        var ctx = document.getElementById("chart<%=stock.Name%>");
+                                        var context = ctx.getContext("2d");
+                                        var parent = document.getElementById("graph-div-<%=stock.Name %>");
+                                        ctx.width = parent.offsetWidth;
+                                        ctx.height = parent.offsetHeight;
+                                        
+                                        var data = "<%=stock.Value.slice(-30)+','+stock.Array%>".split(',')
+                                        var labels = Array.from(Array(40).keys())//"<%=stock.Date.slice(-30)%>".split(',')
+                                        new Chart("chart<%=stock.Name%>", {
+                                            type: "line",
+                                            data: {
+                                                labels: labels,
+                                                datasets: [{
+                                                    fill: true,
+                                                    lineTension: 0,
+                                                    backgroundColor: "rgb(0, 200, 0, 0.2)",
+                                                    borderColor: "rgb(0, 200, 0)",
+                                                    data: data,
+                                                    segment: {
+                                                        borderColor: ctx => predic(ctx, 'rgb(0,0,200)') || down(ctx, 'rgb(200, 0, 0)'),
+                                                        backgroundColor: ctx => predic(ctx, 'rgb(0,0,255,0.2') || down(ctx, 'rgb(255, 0, 0, 0.2)'),
+                                                        borderDash: ctx => skipped(ctx, [6, 6]),
+                                                    },
+                                                    spanGaps: true
+                                                }]
+                                            },
+                                            options: {
+                                                plugins: {
+                                                    legend: {
+                                                        display: false
+                                                    }
+                                                },
+                                                fill: false,
+                                                interaction: {
+                                                    intersect: false
+                                                },
+                                                radius: 0,
+                                                scales:{
+                                                    x:{
+                                                        display: false
+                                                    },
+                                                    y:{
+                                                        display: false
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    </script>
+                                    
+                                    <div class="investment-profit">
+                                        <P class="investment-profit-value">Profit: <%=Math.round(stock.Array.slice(-1)*100)/100%></P>
+                                    </div>
+                                    <div class="investment-buttons">
+                                        <form action="/view/<%= stock.Name %>" method="GET">
+                                            <button type="submit" class="buysell-btn">View</button>
+                                        </form> 
+                                        <form action="/sell/<%= stock.Name %> " method="post">
+                                            <button type="submit" class="buysell-btn">Sell</button>
+                                        </form>
+                                    </div>
+                            </li>
+                        </div>
+                    <%}); %>
+                </ul>
                 <%}%>
-            <%}%>
-            <br><br><br><br>
-            <%if(userType == 'User'){%>
-                <text>Your Brokers</text>
-                <% users.forEach((broker)=>{%>
-                    <br>
-                    <text><%=broker.UID%></text><br>
-                    <text><%=broker.email%></text><br>
-                    <text><%=broker.institution%></text><br>
-                    <text><%=broker.username%></text><br>
-                    <form action="/unsubscribe/<%=broker.UID%>" method="get"><button type="submit">unsubscribe</button></form>
-                    <br>
-                <%})%>
-            <%}else if(userType == 'Broker'){%>
-                <text>Your Subscribers</text>
-                <% users.forEach((sub)=>{%>
-                    <br>
-                    <text><%=sub.UID%></text><br>
-                    <text><%=sub.email%></text><br>
-                    <text><%=sub.username%></text><br>
-                    <br>
-                <%})%>
-                <form action="/report/<%=currentuser.uid%>" method="get">
-                    <input type="text" class="input-field" placeholder="Title" id="repTitle" name="repTitle" required>
-                    <input type="text" class="input-field" placeholder="Body" id="repBody" name="repBody" required>
-                    <input type="text" class="input-field" placeholder="STOCK" id="repStock" name="repStock" required>
-                    <button type="submit">Report</button>
-                </form>
-            <%}%>
+                <%if(userType == 'User'){%>
+                    <div class="user-section-title">
+                        <p>Your Brokers</p>
+                    </div>
+                    <div class="user-section-brokers">
+                        <ul class="brokers-list">
+                            <% users.forEach((broker)=>{%>
+                                <li class="brokers-list-item">
+                                    <div class="broker-banner">
+                                        <div>
+                                            <div class="user-banner-pfp">
+                                                <img src="../images/blank-pfp.png">
+                                            </div>
+                                            <div class="user-banner-info">
+                                                <p class="user-banner-info-name"><%=broker.username%></p>
+                                                <p class="user-banner-info-email"><%=broker.email%></p>
+                                                <p class="user-banner-info-email"><%=broker.institution%></p>
+                                            </div>
+                                        </div>
+                                        <form action="/unsubscribe/<%=broker.UID%>" method="get">
+                                            <button type="submit" class="buysell-btn">unsubscribe</button>
+                                        </form>
+                                    </div>
+                                    <div class="broker-reports">
+                                    </div>
+                                </li>
+                            <%})%>
+                        </ul>
+                    </div>
+                <%}else if(userType == 'Broker'){%>
+                    <div class="user-section-title">
+                        <p>Your Clients</p>
+                    </div>
+                    <div class="user-section-brokers">
+                        <ul class="brokers-list">
+                            <% users.forEach((sub)=>{%>
+                                <li class="brokers-list-item">
+                                    <div class="broker-banner">
+                                        <div>
+                                            <div class="user-banner-pfp">
+                                                <img src="../images/blank-pfp.png">
+                                            </div>
+                                            <div class="user-banner-info">
+                                                <p class="user-banner-info-name"><%=sub.username%></p>
+                                                <p class="user-banner-info-email"><%=sub.email%></p>
+                                            </div>
+                                        </div>
+                                        <form action="/private-report/<%=sub.UID%>" method="get">
+                                            <button type="submit" class="buysell-btn">Report</button>
+                                        </form>
+                                    </div>
+                                    <div class="broker-reports">
+                                    </div>
+                                </li>
+                            <%})%>
+                        </ul>
+                    </div>
+                <%}%>
+            </div>
+            <%- include('../partials/notifs')  %> 
         </div>
     </body>
 </html>
